@@ -1,4 +1,5 @@
 {
+  // Для работы переименовать файл в crm_settings.json
   "CrmTestData": {
     // Токен для авторизации
     "AuthToken": "token",

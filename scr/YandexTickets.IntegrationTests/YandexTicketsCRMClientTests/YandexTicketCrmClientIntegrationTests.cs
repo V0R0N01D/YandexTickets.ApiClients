@@ -1,24 +1,24 @@
-﻿using YandexTicketsCRMClient;
-using YandexTicketsCommon.Models.Requests;
-using YandexTicketsCommon.Models.Enums;
-using YandexTicketsCRMClient.Models.Requests;
+﻿using YandexTickets.CrmApiClient;
+using YandexTickets.Common.Models.Requests;
+using YandexTickets.Common.Models.Enums;
+using YandexTickets.CrmApiClient.Models.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using YandexTickets.IntegrationTests.Models;
 using Microsoft.Extensions.Options;
 
-namespace YandexTickets.IntegrationTests.YandexTicketsCRMClientTests;
+namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 
 /// <summary>
 /// Интеграционные тесты для методов YandexTicketCrmClient.
 /// </summary>
 public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 {
-	private readonly YandexTicketCrmClient _client;
+	private readonly YandexTicketsCrmApiClient _client;
 	private readonly CrmTestData _crmTestData;
 
 	public YandexTicketCrmClientIntegrationTests(TestFixture fixture)
 	{
-		_client = fixture.ServiceProvider.GetRequiredService<YandexTicketCrmClient>();
+		_client = fixture.ServiceProvider.GetRequiredService<YandexTicketsCrmApiClient>();
 		var option = fixture.ServiceProvider.GetRequiredService<IOptions<CrmTestData>>();
 		_crmTestData = option.Value;
 
