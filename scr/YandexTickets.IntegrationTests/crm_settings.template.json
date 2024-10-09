@@ -1,0 +1,8 @@
+{
+  "CrmTestData": {
+    // Токен для авторизации
+    "AuthToken": "token",
+    // Идентификатор города, можно получить из запроса GetCityListAsync
+    "CityId": "cityId"
+  }
+}
