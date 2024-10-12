@@ -1,4 +1,6 @@
-﻿namespace YandexTickets.Common.Models.Requests;
+﻿using YandexTickets.Common.Models.Requests;
+
+namespace YandexTickets.CrmApiClient.Models.Requests;
 
 /// <summary>
 /// Запрос для получения списка городов.

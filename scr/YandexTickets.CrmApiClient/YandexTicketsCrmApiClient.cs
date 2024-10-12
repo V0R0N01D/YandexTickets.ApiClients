@@ -1,16 +1,18 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Reflection;
+using System.Text.Json;
 using YandexTickets.Common;
-using YandexTickets.Common.Models.Requests;
-using YandexTickets.Common.Models.Responses;
 using YandexTickets.CrmApiClient.Models.Requests;
 using YandexTickets.CrmApiClient.Models.Responses;
+using YandexTickets.CrmApiClient.Services.Attributes;
+using YandexTickets.CrmApiClient.Services.Converters;
 
 namespace YandexTickets.CrmApiClient;
 
 /// <summary>
 /// Клиент для взаимодействия с API CRM Яндекс.Билетов.
 /// </summary>
-public class YandexTicketsCrmApiClient
+public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 {
 	private string _baseUrl = "https://api.tickets.yandex.net/api/crm/";
 
@@ -81,7 +83,7 @@ public class YandexTicketsCrmApiClient
 	/// содержащий статус ответа и список событий или ошибку.
 	/// При внутренней ошибке клиента выкинет YandexTicketsException.
 	/// </returns>
-	public Task<EventListResponse> GetEventsListAsync(GetEventListRequest request)
+	public Task<EventListResponse> GetEventListAsync(GetEventListRequest request)
 	{
 		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath());
 	}
@@ -93,17 +95,36 @@ public class YandexTicketsCrmApiClient
 	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
 	/// <param name="requestPath">Путь запроса с параметрами.</param>
 	/// <returns>Десериализованный ответ от API.</returns>
-	/// <exception cref="YandexTicketsException">Выбрасывается при ошибке запроса или десериализации.</exception>
-	private async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath)
+	/// <exception cref="YandexTicketsException">Выбрасывается при ошибке десериализации или пустом ответе.</exception>
+	private async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath) // where TResponse : ResponseBase<> Это не работает
 	{
 		var response = await _httpClient.GetAsync(requestPath);
 		response.EnsureSuccessStatusCode();
 
-		var responseContent = await response.Content.ReadAsStringAsync();
+		return await DeserializeResponse<TResponse>(response.Content);
+	}
 
+	/// <summary>
+	/// Десериализует ответ полученный в запросе.
+	/// </summary>
+	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
+	/// <param name="content">Содержимое ответа.</param>
+	/// <returns>Десериализованный ответ.</returns>
+	/// <exception cref="YandexTicketsException"></exception>
+	private async Task<TResponse> DeserializeResponse<TResponse>(HttpContent content)
+	{
 		try
 		{
-			var result = JsonSerializer.Deserialize<TResponse>(responseContent);
+			var options = new JsonSerializerOptions();
+
+			// Проверка есть ли у класса ответ атрибут,
+			// при котором будет иная обработка десериализации массива
+			var type = typeof(TResponse);
+			var brokenAttribute = type.GetCustomAttribute<SingleElementArrayAttribute>();
+			if (brokenAttribute != null)
+				options.Converters.Add(new SingleElementArrayConverterFactory());
+
+			var result = await content.ReadFromJsonAsync<TResponse>(options, CancellationToken.None);
 			return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
 		}
 		catch (JsonException ex)

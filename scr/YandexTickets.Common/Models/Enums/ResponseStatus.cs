@@ -15,12 +15,10 @@ public enum ResponseStatus
 	/// <summary>
 	/// Запрос выполнен
 	/// </summary>
-	[EnumMember(Value = "0")]
 	Success,
 
 	/// <summary>
 	/// Произошла ошибка
 	/// </summary>
-	[EnumMember(Value = "1")]
 	Failed,
 }

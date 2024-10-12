@@ -32,6 +32,7 @@ public abstract class RequestBase
 	/// <summary>
 	/// Построить строку запроса с параметрами.
 	/// </summary>
+	/// <returns>Cтрока запроса с параметрами.</returns>
 	public string GetRequestPath()
 	{
 		var type = this.GetType();

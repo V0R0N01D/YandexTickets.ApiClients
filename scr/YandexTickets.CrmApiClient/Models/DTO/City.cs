@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace YandexTickets.Common.Models.DTO;
+namespace YandexTickets.CrmApiClient.Models.DTO;
 
 /// <summary>
 /// Город.

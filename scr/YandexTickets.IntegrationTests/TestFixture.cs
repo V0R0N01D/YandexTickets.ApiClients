@@ -23,7 +23,7 @@ public class TestFixture : IDisposable
 		services.AddSingleton<IConfiguration>(configuration);
 		services.Configure<CrmTestData>(configuration.GetSection("CrmTestData"));
 
-		services.AddHttpClient<YandexTicketsCrmApiClient>();
+		services.AddHttpClient<IYandexTicketsCrmApiClient, YandexTicketsCrmApiClient>();
 
 		ServiceProvider = services.BuildServiceProvider();
 	}

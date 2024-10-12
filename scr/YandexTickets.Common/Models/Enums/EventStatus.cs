@@ -15,12 +15,10 @@ public enum EventStatus
 	/// <summary>
 	/// Закрыто
 	/// </summary>
-	[EnumMember(Value = "0")]
 	Close,
 
 	/// <summary>
 	/// В продаже
 	/// </summary>
-	[EnumMember(Value = "1")]
 	OnSale,
 }

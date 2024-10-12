@@ -5,7 +5,7 @@ using YandexTickets.CrmApiClient.Services.Attributes;
 namespace YandexTickets.CrmApiClient.Models.Responses;
 
 /// <summary>
-/// Ответ, содержащий список мероприятий.
+/// Ответ, содержащий список городов.
 /// </summary>
 [SingleElementArray]
-public class ActivityListResponse : ResponseBase<List<Activity>> { }
+public class CityListResponse : ResponseBase<List<City>> { }

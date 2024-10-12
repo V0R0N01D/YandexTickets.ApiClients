@@ -1,5 +1,4 @@
 ﻿using YandexTickets.CrmApiClient;
-using YandexTickets.Common.Models.Requests;
 using YandexTickets.Common.Models.Enums;
 using YandexTickets.CrmApiClient.Models.Requests;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,12 +12,12 @@ namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 /// </summary>
 public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 {
-	private readonly YandexTicketsCrmApiClient _client;
+	private readonly IYandexTicketsCrmApiClient _client;
 	private readonly CrmTestData _crmTestData;
 
 	public YandexTicketCrmClientIntegrationTests(TestFixture fixture)
 	{
-		_client = fixture.ServiceProvider.GetRequiredService<YandexTicketsCrmApiClient>();
+		_client = fixture.ServiceProvider.GetRequiredService<IYandexTicketsCrmApiClient>();
 		var option = fixture.ServiceProvider.GetRequiredService<IOptions<CrmTestData>>();
 		_crmTestData = option.Value;
 
@@ -67,7 +66,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 			Assert.Fail("Не указан идентификатор города.");
 
 		var request = new GetEventListRequest(_crmTestData.AuthToken, _crmTestData.CityId);
-		var response = await _client.GetEventsListAsync(request);
+		var response = await _client.GetEventListAsync(request);
 
 		Assert.Equal(ResponseStatus.Success, response.Status);
 		Assert.NotNull(response.Result);
