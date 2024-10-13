@@ -5,7 +5,12 @@ namespace YandexTickets.CrmApiClient;
 
 public interface IYandexTicketsCrmApiClient
 {
-	Task<CityListResponse> GetCityListAsync(GetCityListRequest request, CancellationToken ct = default);
-	Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request, CancellationToken ct = default);
-	Task<EventListResponse> GetEventListAsync(GetEventListRequest request, CancellationToken ct = default);
+	Task<CityListResponse> GetCityListAsync(GetCityListRequest request,
+		CancellationToken ct = default);
+	Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request,
+		CancellationToken ct = default);
+	Task<EventListResponse> GetEventListAsync(GetEventListRequest request,
+		CancellationToken ct = default);
+	Task<EventReportResponse> GetEventReportAsync(GetEventReportRequest request,
+		CancellationToken ct = default);
 }

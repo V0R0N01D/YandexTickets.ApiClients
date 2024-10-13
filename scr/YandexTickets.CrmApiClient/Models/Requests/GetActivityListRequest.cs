@@ -3,7 +3,7 @@
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
 /// <summary>
-/// Класс запроса получения списка мероприятий.
+/// Класс запроса для получения списка мероприятий.
 /// </summary>
 public class GetActivityListRequest : RequestBaseWithCity
 {

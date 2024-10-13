@@ -4,8 +4,16 @@
     // Данные для доступа к api
     "Login": "login",
     "Password": "password",
-    
-    // Идентификатор города, можно получить из запроса GetCityListAsync
-    "CityId": "cityId"
+
+    // Идентификатор города, можно получить в тесте GetCityListAsync
+    // (Необходим для всех тестов, кроме GetCityListAsync)
+    "CityId": "cityId",
+
+    // Идентификаторы событий, можно получить в тесте GetEventListAsync 
+    // (Необходим для теста GetEventReportAsync)
+    "EventsId": [
+      12345678,
+      87654321
+    ]
   }
 }

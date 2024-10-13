@@ -4,7 +4,7 @@ using YandexTickets.Common.Services.Attributes;
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
 /// <summary>
-/// Класс запроса получения списка событий.
+/// Класс запроса для получения списка событий.
 /// </summary>
 public class GetEventListRequest : RequestBaseWithCity
 {

@@ -72,6 +72,12 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), ct);
 	}
 
+	public Task<EventReportResponse> GetEventReportAsync(GetEventReportRequest request,
+		CancellationToken ct = default)
+	{
+		return SendGetRequestAsync<EventReportResponse>(request.GetRequestPath(), ct);
+	}
+
 
 	/// <summary>
 	/// Десериализует ответ полученный в запросе.

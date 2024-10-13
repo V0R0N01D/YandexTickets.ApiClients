@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using System.Collections;
 using System.Reflection;
+using System.Text;
 using YandexTickets.Common.Services.Attributes;
 using YandexTickets.Common.Services.Exceptions;
 
@@ -53,50 +55,57 @@ public abstract class RequestBase
 
 			string paramName = attribute.Name;
 
-			if (attribute.IsRequired)
-			{
-				AddQueryParam(queryParams, paramName, property.GetValue(this));
-				continue;
-			}
-
-			AddOptionalQueryParam(queryParams, paramName, property.GetValue(this));
+			AddQueryParam(queryParams, paramName, property.GetValue(this), attribute.IsRequired);
 		}
 
 		return QueryHelpers.AddQueryString("?", queryParams!);
 	}
 
 	/// <summary>
-	/// Добавляет обязательный параметр в запрос.
+	/// Добавляет параметр в запрос.
 	/// </summary>
 	/// <param name="dictionary">Словарь с параметрами</param>
 	/// <param name="title">Название параметра</param>
 	/// <param name="value">Значение параметра</param>
-	/// <exception cref="YandexTicketsException"></exception>
+	/// <param name="isRequired">Является ли параметр обязательным</param>
 	private static void AddQueryParam(Dictionary<string, string> dictionary, string title,
-		object? value)
+		object? value, bool isRequired = false)
 	{
 		if (value is null)
-			throw new ArgumentNullException($"Обязательный параметр {title} равен null.");
+		{
+			if (isRequired)
+				throw new ArgumentNullException($"Обязательный параметр {title} равен null.");
 
-		var strValue = value.ToString();
+			return;
+		}
+
+		string? strValue;
+
+		if (value is IEnumerable enumerable && value is not string)
+		{
+			var values = new List<string?>();
+
+			foreach (var item in enumerable)
+			{
+				if (item != null)
+					values.Add(item.ToString());
+			}
+
+			strValue = string.Join(',', values);
+		}
+		else
+		{
+			strValue = value.ToString();
+		}
+
 		if (string.IsNullOrWhiteSpace(strValue))
-			throw new ArgumentException($"Обязательный параметр {title} содержит пустую строку.");
+		{
+			if (isRequired)
+				throw new ArgumentException($"Обязательный параметр {title} содержит пустую строку.");
+
+			return;
+		}
 
 		dictionary.TryAdd(title, strValue);
-	}
-
-	/// <summary>
-	/// Добавляет необязательный параметр в запрос.
-	/// </summary>
-	/// <param name="dictionary">Словарь с параметрами</param>
-	/// <param name="title">Название параметра</param>
-	/// <param name="value">Значение параметра</param>
-	private static void AddOptionalQueryParam(Dictionary<string, string> dictionary, string title,
-		object? value)
-	{
-		if (value is null || string.IsNullOrWhiteSpace(value.ToString()))
-			return;
-
-		AddQueryParam(dictionary, title, value);
 	}
 }

@@ -75,6 +75,21 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		AssertResponseListSuccess(response);
 	}
 
+	/// <summary>
+	/// Проверяет получение отчета по событиям.
+	/// </summary>
+	[Fact]
+	public async Task GetEventReportAsync()
+	{
+		if (string.IsNullOrWhiteSpace(_crmTestData.CityId))
+			Assert.Fail("Не указан идентификатор города.");
+
+		var request = new GetEventReportRequest(_auth, _crmTestData.CityId, _crmTestData.EventsId);
+		var response = await _client.GetEventReportAsync(request);
+
+		AssertResponseListSuccess(response);
+	}
+
 
 	// Вспомогательный метод для общих проверок
 	private void AssertResponseListSuccess<T>(ResponseBase<List<T>> response)
