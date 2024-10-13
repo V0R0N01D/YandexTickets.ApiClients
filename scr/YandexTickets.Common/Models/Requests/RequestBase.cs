@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using System.Reflection;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Exceptions;
 
 namespace YandexTickets.Common.Models.Requests;
 
@@ -75,12 +76,11 @@ public abstract class RequestBase
 		object? value)
 	{
 		if (value is null)
-			throw new YandexTicketsException($"Обязательный параметр {title} равен null.");
+			throw new ArgumentNullException($"Обязательный параметр {title} равен null.");
 
 		var strValue = value.ToString();
 		if (string.IsNullOrWhiteSpace(strValue))
-			throw new YandexTicketsException($"Обязательный параметр {title} " +
-				$"содержит пустую строку.");
+			throw new ArgumentException($"Обязательный параметр {title} содержит пустую строку.");
 
 		dictionary.TryAdd(title, strValue);
 	}

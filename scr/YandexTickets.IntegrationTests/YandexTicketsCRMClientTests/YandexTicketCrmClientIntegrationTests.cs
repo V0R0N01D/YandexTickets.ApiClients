@@ -4,6 +4,7 @@ using YandexTickets.CrmApiClient.Models.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using YandexTickets.IntegrationTests.Models;
 using Microsoft.Extensions.Options;
+using YandexTickets.Common.Models.Responses;
 
 namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 
@@ -34,9 +35,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		var request = new GetCityListRequest(_crmTestData.AuthToken);
 		var response = await _client.GetCityListAsync(request);
 
-		Assert.Equal(ResponseStatus.Success, response.Status);
-		Assert.NotNull(response.Result);
-		Assert.NotEmpty(response.Result);
+		AssertResponseListSuccess(response);
 	}
 
 	/// <summary>
@@ -51,9 +50,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		var request = new GetActivityListRequest(_crmTestData.AuthToken, _crmTestData.CityId);
 		var response = await _client.GetActivityListAsync(request);
 
-		Assert.Equal(ResponseStatus.Success, response.Status);
-		Assert.NotNull(response.Result);
-		Assert.NotEmpty(response.Result);
+		AssertResponseListSuccess(response);
 	}
 
 	/// <summary>
@@ -68,7 +65,14 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		var request = new GetEventListRequest(_crmTestData.AuthToken, _crmTestData.CityId);
 		var response = await _client.GetEventListAsync(request);
 
-		Assert.Equal(ResponseStatus.Success, response.Status);
+		AssertResponseListSuccess(response);
+	}
+
+
+	// Вспомогательный метод для общих проверок
+	private void AssertResponseListSuccess<T>(ResponseBase<List<T>> response)
+	{
+		Assert.True(response.Status == ResponseStatus.Success, response.Error);
 		Assert.NotNull(response.Result);
 		Assert.NotEmpty(response.Result);
 	}

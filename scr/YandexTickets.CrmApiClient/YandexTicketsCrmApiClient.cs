@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
-using YandexTickets.Common;
+using YandexTickets.Common.Services.Exceptions;
 using YandexTickets.CrmApiClient.Models.Requests;
 using YandexTickets.CrmApiClient.Models.Responses;
 using YandexTickets.CrmApiClient.Services.Attributes;
@@ -49,11 +49,11 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 	/// <returns>
 	/// При наличии ответа, вернёт CityListResponse,
 	/// содержащий статус ответа и список городов или ошибку.
-	/// При внутренней ошибке клиента выкинет YandexTicketsException.
 	/// </returns>
-	public Task<CityListResponse> GetCityListAsync(GetCityListRequest request)
+	public Task<CityListResponse> GetCityListAsync(GetCityListRequest request,
+		CancellationToken ct = default)
 	{
-		return SendGetRequestAsync<CityListResponse>(request.GetRequestPath());
+		return SendGetRequestAsync<CityListResponse>(request.GetRequestPath(), ct);
 	}
 
 	/// <summary>
@@ -63,11 +63,11 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 	/// <returns>
 	/// При наличии ответа, вернёт ActivityListResponse,
 	/// содержащий статус ответа и список мероприятий или ошибку.
-	/// При внутренней ошибке клиента выкинет YandexTicketsException.
 	/// </returns>
-	public Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request)
+	public Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request,
+		CancellationToken ct = default)
 	{
-		return SendGetRequestAsync<ActivityListResponse>(request.GetRequestPath());
+		return SendGetRequestAsync<ActivityListResponse>(request.GetRequestPath(), ct);
 	}
 
 	/// <summary>
@@ -81,11 +81,11 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 	/// <returns>
 	/// При наличии ответа, вернёт EventListResponse,
 	/// содержащий статус ответа и список событий или ошибку.
-	/// При внутренней ошибке клиента выкинет YandexTicketsException.
 	/// </returns>
-	public Task<EventListResponse> GetEventListAsync(GetEventListRequest request)
+	public Task<EventListResponse> GetEventListAsync(GetEventListRequest request,
+		CancellationToken ct = default)
 	{
-		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath());
+		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), ct);
 	}
 
 
@@ -95,13 +95,12 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
 	/// <param name="requestPath">Путь запроса с параметрами.</param>
 	/// <returns>Десериализованный ответ от API.</returns>
-	/// <exception cref="YandexTicketsException">Выбрасывается при ошибке десериализации или пустом ответе.</exception>
-	private async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath) // where TResponse : ResponseBase<> Это не работает
+	private async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath, CancellationToken ct) // where TResponse : ResponseBase<> Это не работает
 	{
 		var response = await _httpClient.GetAsync(requestPath);
 		response.EnsureSuccessStatusCode();
 
-		return await DeserializeResponse<TResponse>(response.Content);
+		return await DeserializeResponseAsync<TResponse>(response.Content, ct);
 	}
 
 	/// <summary>
@@ -110,26 +109,18 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
 	/// <param name="content">Содержимое ответа.</param>
 	/// <returns>Десериализованный ответ.</returns>
-	/// <exception cref="YandexTicketsException"></exception>
-	private async Task<TResponse> DeserializeResponse<TResponse>(HttpContent content)
+	private async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content, CancellationToken ct)
 	{
-		try
-		{
-			var options = new JsonSerializerOptions();
+		var options = new JsonSerializerOptions();
 
-			// Проверка есть ли у класса ответ атрибут,
-			// при котором будет иная обработка десериализации массива
-			var type = typeof(TResponse);
-			var brokenAttribute = type.GetCustomAttribute<SingleElementArrayAttribute>();
-			if (brokenAttribute != null)
-				options.Converters.Add(new SingleElementArrayConverterFactory());
+		// Проверка есть ли у класса ответ атрибут,
+		// при котором будет иная обработка десериализации массива в ответе
+		var type = typeof(TResponse);
+		var brokenAttribute = type.GetCustomAttribute<SingleElementArrayAttribute>();
+		if (brokenAttribute != null)
+			options.Converters.Add(new SingleElementArrayConverterFactory());
 
-			var result = await content.ReadFromJsonAsync<TResponse>(options, CancellationToken.None);
-			return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
-		}
-		catch (JsonException ex)
-		{
-			throw new YandexTicketsException("Ошибка при десериализации ответа от сервера.", ex);
-		}
+		var result = await content.ReadFromJsonAsync<TResponse>(options, ct);
+		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
 	}
 }

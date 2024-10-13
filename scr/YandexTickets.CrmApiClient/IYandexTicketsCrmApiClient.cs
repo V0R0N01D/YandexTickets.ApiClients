@@ -5,7 +5,7 @@ namespace YandexTickets.CrmApiClient;
 
 public interface IYandexTicketsCrmApiClient
 {
-	Task<CityListResponse> GetCityListAsync(GetCityListRequest request);
-	Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request);
-	Task<EventListResponse> GetEventListAsync(GetEventListRequest request);
+	Task<CityListResponse> GetCityListAsync(GetCityListRequest request, CancellationToken ct = default);
+	Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request, CancellationToken ct = default);
+	Task<EventListResponse> GetEventListAsync(GetEventListRequest request, CancellationToken ct = default);
 }
