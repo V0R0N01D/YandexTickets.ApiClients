@@ -1,8 +1,10 @@
 {
   // Для работы переименовать файл в crm_settings.json
   "CrmTestData": {
-    // Токен для авторизации
-    "AuthToken": "token",
+    // Данные для доступа к api
+    "Login": "login",
+    "Password": "password",
+    
     // Идентификатор города, можно получить из запроса GetCityListAsync
     "CityId": "cityId"
   }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
+using YandexTickets.Common;
 using YandexTickets.Common.Services.Exceptions;
 using YandexTickets.CrmApiClient.Models.Requests;
 using YandexTickets.CrmApiClient.Models.Responses;
@@ -12,34 +13,17 @@ namespace YandexTickets.CrmApiClient;
 /// <summary>
 /// Клиент для взаимодействия с API CRM Яндекс.Билетов.
 /// </summary>
-public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
+public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTicketsCrmApiClient
 {
-	private string _baseUrl = "https://api.tickets.yandex.net/api/crm/";
-
-	/// <summary>
-	/// Хост для всех запросов к API. <br><br></br></br>
-	/// Источник: <a href="https://yandex.ru/dev/tickets/crm/doc/ru/concepts/access"/>.
-	/// </summary>
-	public string BaseURL
-	{
-		get => _baseUrl;
-		set
-		{
-			_baseUrl = value;
-			_httpClient.BaseAddress = new Uri(_baseUrl);
-		}
-	}
-
-	private readonly HttpClient _httpClient;
+	const string BaseUrl = "https://api.tickets.yandex.net/api/crm/";
 
 	/// <summary>
 	/// Конструктор клиента для взаимодействия с API CRM Яндекс.Билетов.
 	/// </summary>
 	/// <param name="client">HttpClient который будет использоваться для запросов.</param>
-	public YandexTicketsCrmApiClient(HttpClient client)
+	public YandexTicketsCrmApiClient(HttpClient client) : base(client)
 	{
-		_httpClient = client;
-		client.BaseAddress = new Uri(_baseUrl);
+		client.BaseAddress = new Uri(BaseUrl);
 	}
 
 	/// <summary>
@@ -90,26 +74,13 @@ public class YandexTicketsCrmApiClient : IYandexTicketsCrmApiClient
 
 
 	/// <summary>
-	/// Выполняет GET-запрос и возвращает десериализованный ответ.
-	/// </summary>
-	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
-	/// <param name="requestPath">Путь запроса с параметрами.</param>
-	/// <returns>Десериализованный ответ от API.</returns>
-	private async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath, CancellationToken ct) // where TResponse : ResponseBase<> Это не работает
-	{
-		var response = await _httpClient.GetAsync(requestPath);
-		response.EnsureSuccessStatusCode();
-
-		return await DeserializeResponseAsync<TResponse>(response.Content, ct);
-	}
-
-	/// <summary>
 	/// Десериализует ответ полученный в запросе.
 	/// </summary>
 	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
 	/// <param name="content">Содержимое ответа.</param>
 	/// <returns>Десериализованный ответ.</returns>
-	private async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content, CancellationToken ct)
+	protected override async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content,
+		CancellationToken ct)
 	{
 		var options = new JsonSerializerOptions();
 

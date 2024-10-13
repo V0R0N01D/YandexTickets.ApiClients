@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using YandexTickets.IntegrationTests.Models;
 using Microsoft.Extensions.Options;
 using YandexTickets.Common.Models.Responses;
+using YandexTickets.Common.Services;
 
 namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 
@@ -15,6 +16,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 {
 	private readonly IYandexTicketsCrmApiClient _client;
 	private readonly CrmTestData _crmTestData;
+	private readonly string _auth;
 
 	public YandexTicketCrmClientIntegrationTests(TestFixture fixture)
 	{
@@ -22,8 +24,13 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		var option = fixture.ServiceProvider.GetRequiredService<IOptions<CrmTestData>>();
 		_crmTestData = option.Value;
 
-		if (_crmTestData is null || string.IsNullOrWhiteSpace(_crmTestData.AuthToken))
-			Assert.Fail("Не указан токен авторизации.");
+		if (_crmTestData is null)
+			Assert.Fail("Не создан файл настроек.");
+
+		if (string.IsNullOrWhiteSpace(_crmTestData.Login) || string.IsNullOrWhiteSpace(_crmTestData.Password))
+			Assert.Fail("В настройках не указан логин или пароль.");
+
+		_auth = AuthService.GenerateAuthToken(_crmTestData.Login, _crmTestData.Password);
 	}
 
 	/// <summary>
@@ -32,7 +39,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	[Fact]
 	public async Task GetCityListAsync()
 	{
-		var request = new GetCityListRequest(_crmTestData.AuthToken);
+		var request = new GetCityListRequest(_auth);
 		var response = await _client.GetCityListAsync(request);
 
 		AssertResponseListSuccess(response);
@@ -47,7 +54,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		if (string.IsNullOrWhiteSpace(_crmTestData.CityId))
 			Assert.Fail("Не указан идентификатор города.");
 
-		var request = new GetActivityListRequest(_crmTestData.AuthToken, _crmTestData.CityId);
+		var request = new GetActivityListRequest(_auth, _crmTestData.CityId);
 		var response = await _client.GetActivityListAsync(request);
 
 		AssertResponseListSuccess(response);
@@ -62,7 +69,7 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		if (string.IsNullOrWhiteSpace(_crmTestData.CityId))
 			Assert.Fail("Не указан идентификатор города.");
 
-		var request = new GetEventListRequest(_crmTestData.AuthToken, _crmTestData.CityId);
+		var request = new GetEventListRequest(_auth, _crmTestData.CityId);
 		var response = await _client.GetEventListAsync(request);
 
 		AssertResponseListSuccess(response);
