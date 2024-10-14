@@ -1,13 +1,12 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace YandexTickets.Common.Models.Enums;
 
 /// <summary>
-/// Статус события или мероприятия.
-/// Значения:
-/// Close - Закрыто;
-/// OnSale - В продаже
+/// Статус события или мероприятия. <br/><br/>
+/// Значения: <br/>
+/// Close - Закрыто; <br/>
+/// OnSale - В продаже; <br/>
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EventStatus

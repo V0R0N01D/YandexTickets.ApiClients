@@ -27,7 +27,7 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	}
 
 	/// <summary>
-	/// Возвращает массив городов.
+	/// Возвращает список городов.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
 	/// <returns>
@@ -41,7 +41,7 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	}
 
 	/// <summary>
-	/// Возвращает массив мероприятий.
+	/// Возвращает список мероприятий.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
 	/// <returns>
@@ -72,10 +72,32 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), ct);
 	}
 
+	/// <summary>
+	/// Возвращает отчет о событиях.
+	/// </summary>
+	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа, вернёт EventReportResponse,
+	/// содержащий статус ответа и отчет о событиях или ошибку.
+	/// </returns>
 	public Task<EventReportResponse> GetEventReportAsync(GetEventReportRequest request,
 		CancellationToken ct = default)
 	{
 		return SendGetRequestAsync<EventReportResponse>(request.GetRequestPath(), ct);
+	}
+
+	/// <summary>
+	/// Возвращает список заказов.
+	/// </summary>
+	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа, вернёт OrderListResponse,
+	/// содержащий статус ответа и список заказов или ошибку.
+	/// </returns>
+	public Task<OrderListResponse> GetOrderListAsync(GetOrderListRequest request,
+		CancellationToken ct = default)
+	{
+		return SendGetRequestAsync<OrderListResponse>(request.GetRequestPath(), ct);
 	}
 
 

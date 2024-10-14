@@ -33,7 +33,7 @@ public abstract class RequestBase
 	protected abstract string Action { get; }
 
 	/// <summary>
-	/// Построить строку запроса с параметрами.
+	/// Построить строку запроса с параметрами на основе класса запроса.
 	/// </summary>
 	/// <returns>Cтрока запроса с параметрами.</returns>
 	public string GetRequestPath()
@@ -81,8 +81,18 @@ public abstract class RequestBase
 
 		string? strValue;
 
-		if (value is IEnumerable enumerable && value is not string)
+		if (value is DateOnly dateOnlyValue)
 		{
+			// Форматирование DateOnly в строку формата "yyyy-MM-dd"
+			strValue = dateOnlyValue.ToString("yyyy-MM-dd");
+		}
+		else if (value is Enum enumValue)
+		{
+			strValue = Convert.ToInt32(enumValue).ToString();
+		}
+		else if (value is IEnumerable enumerable && value is not string)
+		{
+			// Формирование строки в формате "value,value..."
 			var values = new List<string?>();
 
 			foreach (var item in enumerable)

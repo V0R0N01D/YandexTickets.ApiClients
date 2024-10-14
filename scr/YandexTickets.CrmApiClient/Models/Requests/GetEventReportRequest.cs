@@ -29,6 +29,6 @@ public class GetEventReportRequest : RequestBaseWithCity
 	/// <summary>
 	/// Идентификаторы событий.
 	/// </summary>
-	[QueryParameter("event_ids", false)]
+	[QueryParameter("event_ids")]
 	public int[] EventIds { get; set; }
 }

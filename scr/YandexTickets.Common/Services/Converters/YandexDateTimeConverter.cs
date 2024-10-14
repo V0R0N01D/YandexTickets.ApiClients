@@ -17,7 +17,7 @@ public class YandexDateTimeConverter : JsonConverter<DateTime>
 	{
 		var dateString = reader.GetString();
 		if (string.IsNullOrWhiteSpace(dateString))
-			throw new JsonException("Не удалось преобразовать DateTime. Входная строка была пустой.");
+			throw new JsonException("Не удалось распарсить значение в DateTime. Входная строка была пустой.");
 
 		return DateTime.ParseExact(dateString, DateTimeFormat, _culture);
 	}

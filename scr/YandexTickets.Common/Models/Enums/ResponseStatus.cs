@@ -1,13 +1,12 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace YandexTickets.Common.Models.Enums;
 
 /// <summary>
-/// Статус ответа.
-/// Значения:
-/// Success - Запрос выполнен;
-/// Failed - Произошла ошибка
+/// Статус ответа. <br/><br/>
+/// Значения: <br/>
+/// Success - Запрос выполнен; <br/>
+/// Failed - Произошла ошибка <br/>
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ResponseStatus
