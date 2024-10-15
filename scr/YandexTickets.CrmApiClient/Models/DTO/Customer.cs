@@ -12,13 +12,14 @@ public record Customer
 	/// Идентификатор покупателя.
 	/// </summary>
 	[JsonPropertyName("id")]
+	[JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
 	public int Id { get; set; }
 
 	/// <summary>
 	/// Имя покупателя.
 	/// </summary>
 	[JsonPropertyName("name")]
-	public string Name { get; set; }
+	public string? Name { get; set; }
 
 	/// <summary>
 	/// Телефон покупателя.

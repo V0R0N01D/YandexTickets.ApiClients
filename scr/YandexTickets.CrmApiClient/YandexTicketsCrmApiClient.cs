@@ -27,6 +27,28 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	}
 
 	/// <summary>
+	/// Десериализует ответ полученный в запросе.
+	/// </summary>
+	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
+	/// <param name="content">Содержимое ответа.</param>
+	/// <returns>Десериализованный ответ.</returns>
+	protected override async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content,
+		CancellationToken ct)
+	{
+		var options = new JsonSerializerOptions();
+
+		// Проверка есть ли у класса ответ атрибут,
+		// при котором будет иная обработка десериализации массива в ответе
+		var type = typeof(TResponse);
+		var brokenAttribute = type.GetCustomAttribute<SingleElementArrayAttribute>();
+		if (brokenAttribute != null)
+			options.Converters.Add(new SingleElementArrayConverterFactory());
+
+		var result = await content.ReadFromJsonAsync<TResponse>(options, ct);
+		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
+	}
+
+	/// <summary>
 	/// Возвращает список городов.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
@@ -100,26 +122,17 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		return SendGetRequestAsync<OrderListResponse>(request.GetRequestPath(), ct);
 	}
 
-
 	/// <summary>
-	/// Десериализует ответ полученный в запросе.
+	/// Возвращает детали заказов.
 	/// </summary>
-	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
-	/// <param name="content">Содержимое ответа.</param>
-	/// <returns>Десериализованный ответ.</returns>
-	protected override async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content,
-		CancellationToken ct)
+	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа вернёт OrderInfoResponse,
+	/// содержащий статус ответа и детали заказов или ошибку.
+	/// </returns>
+	public Task<OrderInfoResponse> GetOrderInfoAsync(GetOrderInfoRequest request,
+		CancellationToken ct = default)
 	{
-		var options = new JsonSerializerOptions();
-
-		// Проверка есть ли у класса ответ атрибут,
-		// при котором будет иная обработка десериализации массива в ответе
-		var type = typeof(TResponse);
-		var brokenAttribute = type.GetCustomAttribute<SingleElementArrayAttribute>();
-		if (brokenAttribute != null)
-			options.Converters.Add(new SingleElementArrayConverterFactory());
-
-		var result = await content.ReadFromJsonAsync<TResponse>(options, ct);
-		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
+		return SendGetRequestAsync<OrderInfoResponse>(request.GetRequestPath(), ct);
 	}
 }

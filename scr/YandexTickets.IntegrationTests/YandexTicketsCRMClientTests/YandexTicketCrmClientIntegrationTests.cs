@@ -6,6 +6,7 @@ using YandexTickets.IntegrationTests.Models;
 using Microsoft.Extensions.Options;
 using YandexTickets.Common.Models.Responses;
 using YandexTickets.Common.Services;
+using YandexTickets.CrmApiClient.Models.Responses;
 
 namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 
@@ -117,8 +118,8 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 
 		AssertResponseListSuccess(response);
 
-		//// Для startDate не работает часто есть заказы созданные ранее
-		//// (в документации написано, что startDate и endDate это "Дата операции", а какой именно неизвестно).
+		// Для startDate не совсем корректно работает часто есть заказы созданные ранее
+		// (в документации написано, что startDate и endDate это "Дата операции", а какой именно неизвестно).
 		Assert.All(response.Result!, order =>
 		{
 			Assert.True(order.OrderDate <= endDate.ToDateTime(TimeOnly.MaxValue),
@@ -134,17 +135,15 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	{
 		CheckCityIsNotNull();
 
-		// Сначала получение списка и потом взять любой id
-		var requestOrderList = new GetOrderListRequest(_auth, _crmTestData.CityId);
-		var responseOrderList = await _client.GetOrderListAsync(requestOrderList);
-		AssertResponseListSuccess(responseOrderList);
+		// Сначала получение списка заказов и потом взять любой id
+		var orders = await GetOrdersAsync();
 
-		var requestOneOrder = new GetOrderListRequest(_auth, _crmTestData.CityId,
-			responseOrderList.Result![0].Id);
-		var responseOneOrder = await _client.GetOrderListAsync(requestOneOrder);
-		AssertResponseListSuccess(responseOneOrder);
+		var request = new GetOrderListRequest(_auth, _crmTestData.CityId,
+			orders.Result![0].Id);
+		var response = await _client.GetOrderListAsync(request);
+		AssertResponseListSuccess(response);
 
-		Assert.True(responseOneOrder.Result!.Count == 1);
+		Assert.True(response.Result!.Count == 1);
 	}
 
 	/// <summary>
@@ -168,9 +167,52 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	}
 
 
+	/// <summary>
+	/// Проверяет получение информации об 1 заказе.
+	/// </summary>
+	[Fact]
+	public async Task GetOrderInfoAsync()
+	{
+		CheckCityIsNotNull();
+
+		// Сначала получение списка заказов и потом взять любой id
+		var orders = await GetOrdersAsync();
+
+		var request = new GetOrderInfoRequest(_auth, _crmTestData.CityId, orders.Result![0].Id);
+		var response = await _client.GetOrderInfoAsync(request);
+
+		AssertResponseListSuccess(response);
+
+		Assert.True(response.Result!.Count == 1);
+	}
+
+	/// <summary>
+	/// Проверяет получение информации о паре заказов.
+	/// </summary>
+	[Fact]
+	public async Task GetOrdersInfoAsync()
+	{
+		CheckCityIsNotNull();
+
+		// Сначала получение списка заказов и потом взять любой id
+		var orders = await GetOrdersAsync();
+
+		int[] ordersId = orders.Result!.Count > 1
+			? orders.Result.Take(2).Select(o => o.Id).ToArray()
+			: [orders.Result[0].Id];
+
+		var request = new GetOrderInfoRequest(_auth, _crmTestData.CityId, ordersId);
+		var response = await _client.GetOrderInfoAsync(request);
+
+		AssertResponseListSuccess(response);
+
+		Assert.True(response.Result!.Count == ordersId.Length);
+	}
 
 
 
+
+	#region Вспомогательные методы
 	private void CheckCityIsNotNull()
 	{
 		if (string.IsNullOrWhiteSpace(_crmTestData.CityId))
@@ -184,4 +226,15 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		Assert.NotNull(response.Result);
 		Assert.NotEmpty(response.Result);
 	}
+
+	// Метод для получения списка заказов
+	private async Task<OrderListResponse> GetOrdersAsync()
+	{
+		var request = new GetOrderListRequest(_auth, _crmTestData.CityId, status: OrderStatus.Annulate);
+		var response = await _client.GetOrderListAsync(request);
+
+		AssertResponseListSuccess(response);
+		return response;
+	}
+	#endregion
 }
