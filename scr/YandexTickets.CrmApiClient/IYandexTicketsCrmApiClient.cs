@@ -19,4 +19,6 @@ public interface IYandexTicketsCrmApiClient
 		CancellationToken ct = default);
 	Task<CustomerListResponse> GetCustomerListAsync(GetCustomerListRequest request,
 		CancellationToken ct = default);
+	Task<AgentListResponse> GetAgentListAsync(GetAgentListRequest request,
+		CancellationToken ct = default);
 }

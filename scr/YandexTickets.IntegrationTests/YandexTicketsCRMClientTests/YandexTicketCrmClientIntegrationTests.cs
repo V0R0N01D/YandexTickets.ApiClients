@@ -15,21 +15,19 @@ namespace YandexTickets.IntegrationTests.YandexTicketsCrmClientTests;
 /// </summary>
 public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 {
-	private readonly IYandexTicketsCrmApiClient _client;
-	private readonly CrmTestData _crmTestData;
-	private readonly string _auth;
+	readonly IYandexTicketsCrmApiClient _client;
+	readonly CrmTestData _crmTestData;
+	readonly string _auth;
 
 	public YandexTicketCrmClientIntegrationTests(TestFixture fixture)
 	{
 		_client = fixture.ServiceProvider.GetRequiredService<IYandexTicketsCrmApiClient>();
-		var option = fixture.ServiceProvider.GetRequiredService<IOptions<CrmTestData>>();
-		_crmTestData = option.Value;
-
-		if (_crmTestData is null)
-			Assert.Fail("Не создан файл настроек.");
+		var options = fixture.ServiceProvider.GetRequiredService<IOptions<CrmTestData>>();
+		_crmTestData = options.Value
+			?? throw new InvalidOperationException("Не создан файл настроек.");
 
 		if (string.IsNullOrWhiteSpace(_crmTestData.Login) || string.IsNullOrWhiteSpace(_crmTestData.Password))
-			Assert.Fail("В настройках не указан логин или пароль.");
+			throw new InvalidOperationException("В настройках не указан логин или пароль.");
 
 		_auth = AuthService.GenerateAuthToken(_crmTestData.Login, _crmTestData.Password);
 	}
@@ -228,6 +226,23 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		Assert.True(response.Result!.Count <= 5);
 	}
 
+
+	/// <summary>
+	/// Проверяте получения списка агентов.
+	/// </summary>
+	[Fact]
+	public async Task GetAgentListAsync()
+	{
+		CheckCityIsNotNull();
+
+		var request = new GetAgentListRequest(_auth, _crmTestData.CityId, 3);
+		var response = await _client.GetAgentListAsync(request);
+
+		AssertResponseListSuccess(response);
+
+		// Проверка, что агентов вернулось не больше запрошенного количества
+		Assert.True(response.Result!.Count <= 3);
+	}
 
 
 

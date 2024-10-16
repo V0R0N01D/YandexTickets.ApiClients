@@ -149,4 +149,18 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	{
 		return SendGetRequestAsync<CustomerListResponse>(request.GetRequestPath(), ct);
 	}
+
+	/// <summary>
+	/// Возвращает список агентов.
+	/// </summary>
+	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа вернёт AgentListResponse,
+	/// содержащий статус ответа и список агентов или ошибку.
+	/// </returns>
+	public Task<AgentListResponse> GetAgentListAsync(GetAgentListRequest request,
+		CancellationToken ct = default)
+	{
+		return SendGetRequestAsync<AgentListResponse>(request.GetRequestPath(), ct);
+	}
 }
