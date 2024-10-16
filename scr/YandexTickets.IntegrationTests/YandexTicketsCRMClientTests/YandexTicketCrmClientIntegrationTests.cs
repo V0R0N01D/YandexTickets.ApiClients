@@ -19,6 +19,8 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	readonly CrmTestData _crmTestData;
 	readonly string _auth;
 
+	const int DefaultLimit = 3;
+
 	public YandexTicketCrmClientIntegrationTests(TestFixture fixture)
 	{
 		_client = fixture.ServiceProvider.GetRequiredService<IYandexTicketsCrmApiClient>();
@@ -32,81 +34,64 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		_auth = AuthService.GenerateAuthToken(_crmTestData.Login, _crmTestData.Password);
 	}
 
-	/// <summary>
-	/// Проверяет получение списка городов.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение списка городов")]
 	public async Task GetCityListAsync()
 	{
 		var request = new GetCityListRequest(_auth);
 		var response = await _client.GetCityListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 	}
 
-	/// <summary>
-	/// Проверяет получение списка мероприятий.
-	/// </summary>
-	[Fact]
+
+	[Fact(DisplayName = "Получение списка мероприятий")]
 	public async Task GetActivityListAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
 		var request = new GetActivityListRequest(_auth, _crmTestData.CityId);
 		var response = await _client.GetActivityListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 	}
 
-	/// <summary>
-	/// Проверяет получение списка событий.
-	/// </summary>
-	[Fact]
+
+	[Fact(DisplayName = "Получение списка событий")]
 	public async Task GetEventListAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
 		var request = new GetEventListRequest(_auth, _crmTestData.CityId);
 		var response = await _client.GetEventListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 	}
 
-	/// <summary>
-	/// Проверяет получение отчета по событиям.
-	/// </summary>
-	[Fact]
+
+	[Fact(DisplayName = "Получение отчета по событиям")]
 	public async Task GetEventReportAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
 		var request = new GetEventReportRequest(_auth, _crmTestData.CityId, _crmTestData.EventsId);
 		var response = await _client.GetEventReportAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 	}
 
-	/// <summary>
-	/// Проверяет получение списка заказов.
-	/// </summary>
-	[Fact]
+	#region Тесты заказов
+
+	[Fact(DisplayName = "Получение списка заказов")]
 	public async Task GetOrderListAsync()
 	{
-		CheckCityIsNotNull();
-
-		var request = new GetOrderListRequest(_auth, _crmTestData.CityId);
-		var response = await _client.GetOrderListAsync(request);
-
-		AssertResponseListSuccess(response);
+		ValidateCityId();
+		_ = await GetOrdersAsync();
 	}
 
-	/// <summary>
-	/// Проверяет получение списка заказов c периодом дат.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение списка заказов с фильтрацией по датам")]
 	public async Task GetOrderListWithDatesParamAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
 		var startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-2));
 		var endDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-1));
@@ -114,10 +99,11 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		var request = new GetOrderListRequest(_auth, _crmTestData.CityId, startDate: startDate, endDate: endDate);
 		var response = await _client.GetOrderListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 
-		// Для startDate не совсем корректно работает часто есть заказы созданные ранее
-		// (в документации написано, что startDate и endDate это "Дата операции", а какой именно неизвестно).
+		// Для startDate не совсем корректно работает
+		// т.к даты переданные в запросе это даты последней операции,
+		// а в заказе есть только дата создания заказа и нет даты последней операции.
 		Assert.All(response.Result!, order =>
 		{
 			Assert.True(order.OrderDate <= endDate.ToDateTime(TimeOnly.MaxValue),
@@ -125,136 +111,111 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 		});
 	}
 
-	/// <summary>
-	/// Проверяет получение заказа с определенным id.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение заказа по идентификатору")]
 	public async Task GetOrderListWithOrderIdAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
-		// Сначала получение списка заказов и потом взять любой id
 		var orders = await GetOrdersAsync();
+		var orderId = orders.Result![0].Id;
 
-		var request = new GetOrderListRequest(_auth, _crmTestData.CityId,
-			orders.Result![0].Id);
+		var request = new GetOrderListRequest(_auth, _crmTestData.CityId, orderId);
 		var response = await _client.GetOrderListAsync(request);
-		AssertResponseListSuccess(response);
 
+		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count == 1);
+		Assert.Equal(orderId, response.Result![0].Id);
 	}
 
-	/// <summary>
-	/// Проверяет получение списка заказов cо статусом аннулирован.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение списка аннулированных заказов")]
 	public async Task GetOrderListWithAnnulateStatusAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
 		var request = new GetOrderListRequest(_auth, _crmTestData.CityId, status: OrderStatus.Annulate);
 		var response = await _client.GetOrderListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 
 		Assert.All(response.Result!, order =>
 		{
 			Assert.True(order.Status == OrderStatus.Annulate,
-				$"Заказ с идентификатором {order.Id} статус отличный от аннулирован {order.OrderDate}.");
+				$"Заказ с идентификатором {order.Id} статус отличный от аннулирован: {order.Status}.");
 		});
 	}
 
 
-	/// <summary>
-	/// Проверяет получение информации об 1 заказе.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение информации о заказе")]
 	public async Task GetOrderInfoAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
-		// Сначала получение списка заказов и потом взять любой id
 		var orders = await GetOrdersAsync();
+		var orderId = orders.Result![0].Id;
 
-		var request = new GetOrderInfoRequest(_auth, _crmTestData.CityId, orders.Result![0].Id);
+		var request = new GetOrderInfoRequest(_auth, _crmTestData.CityId, orderId);
 		var response = await _client.GetOrderInfoAsync(request);
 
-		AssertResponseListSuccess(response);
-
-		Assert.True(response.Result!.Count == 1);
+		AssertResponseSuccess(response);
+		Assert.Single(response.Result!);
+		Assert.Equal(orderId, response.Result![0].Id);
 	}
 
-	/// <summary>
-	/// Проверяет получение информации о паре заказов.
-	/// </summary>
-	[Fact]
+	[Fact(DisplayName = "Получение информации о нескольких заказах")]
 	public async Task GetOrdersInfoAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
-		// Сначала получение списка заказов и потом взять любой id
 		var orders = await GetOrdersAsync();
-
-		int[] ordersId = orders.Result!.Count > 1
-			? orders.Result.Take(2).Select(o => o.Id).ToArray()
-			: [orders.Result[0].Id];
+		int[] ordersId = orders.Result!.Take(2).Select(o => o.Id).ToArray();
 
 		var request = new GetOrderInfoRequest(_auth, _crmTestData.CityId, ordersId);
 		var response = await _client.GetOrderInfoAsync(request);
 
-		AssertResponseListSuccess(response);
-
-		// Проверка, что заказов вернулось столько, сколько запрашивалось
+		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count == ordersId.Length);
 	}
 
+	#endregion
 
-	/// <summary>
-	/// Проверяте получения списка покупателей.
-	/// </summary>
-	[Fact]
+
+	[Fact(DisplayName = "Получение списка покупателей")]
 	public async Task GetCustomerListAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
-		var request = new GetCustomerListRequest(_auth, _crmTestData.CityId, 5);
+		var request = new GetCustomerListRequest(_auth, _crmTestData.CityId, DefaultLimit);
 		var response = await _client.GetCustomerListAsync(request);
 
-		AssertResponseListSuccess(response);
-
-		// Проверка, что покупателей вернулось не больше запрошенного количества
-		Assert.True(response.Result!.Count <= 5);
+		AssertResponseSuccess(response);
+		Assert.True(response.Result!.Count <= DefaultLimit);
 	}
 
 
-	/// <summary>
-	/// Проверяте получения списка агентов.
-	/// </summary>
-	[Fact]
+
+	[Fact(DisplayName = "Получение списка агентов")]
 	public async Task GetAgentListAsync()
 	{
-		CheckCityIsNotNull();
+		ValidateCityId();
 
-		var request = new GetAgentListRequest(_auth, _crmTestData.CityId, 3);
+		var request = new GetAgentListRequest(_auth, _crmTestData.CityId, DefaultLimit);
 		var response = await _client.GetAgentListAsync(request);
 
-		AssertResponseListSuccess(response);
-
-		// Проверка, что агентов вернулось не больше запрошенного количества
-		Assert.True(response.Result!.Count <= 3);
+		AssertResponseSuccess(response);
+		Assert.True(response.Result!.Count <= DefaultLimit);
 	}
 
 
 
 	#region Вспомогательные методы
-	private void CheckCityIsNotNull()
+	private void ValidateCityId()
 	{
 		if (string.IsNullOrWhiteSpace(_crmTestData.CityId))
-			Assert.Fail("Не указан идентификатор города.");
+			throw new InvalidOperationException("Не указан идентификатор города в настройках тестовых данных.");
 	}
 
 	// Вспомогательный метод для общих проверок
-	private static void AssertResponseListSuccess<T>(ResponseBase<List<T>> response)
+	private static void AssertResponseSuccess<T>(ResponseBase<List<T>> response)
 	{
 		Assert.True(response.Status == ResponseStatus.Success, response.Error);
 		Assert.NotNull(response.Result);
@@ -264,10 +225,10 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	// Метод для получения списка заказов
 	private async Task<OrderListResponse> GetOrdersAsync()
 	{
-		var request = new GetOrderListRequest(_auth, _crmTestData.CityId, status: OrderStatus.Annulate);
+		var request = new GetOrderListRequest(_auth, _crmTestData.CityId);
 		var response = await _client.GetOrderListAsync(request);
 
-		AssertResponseListSuccess(response);
+		AssertResponseSuccess(response);
 		return response;
 	}
 	#endregion

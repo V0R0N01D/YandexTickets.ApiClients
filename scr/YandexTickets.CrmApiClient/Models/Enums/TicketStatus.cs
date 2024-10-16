@@ -1,4 +1,6 @@
-﻿namespace YandexTickets.CrmApiClient.Models.Enums;
+﻿using System.Text.Json.Serialization;
+
+namespace YandexTickets.CrmApiClient.Models.Enums;
 
 /// <summary>
 /// Статус билета. <br/><br/>
@@ -6,6 +8,7 @@
 /// Annulate - Аннулирован; <br/>
 /// Active - Активен; <br/>
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TicketStatus
 {
 	/// <summary>
