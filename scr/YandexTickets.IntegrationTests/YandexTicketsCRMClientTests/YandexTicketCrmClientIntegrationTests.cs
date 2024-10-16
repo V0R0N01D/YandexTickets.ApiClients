@@ -206,7 +206,26 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 
 		AssertResponseListSuccess(response);
 
+		// Проверка, что заказов вернулось столько, сколько запрашивалось
 		Assert.True(response.Result!.Count == ordersId.Length);
+	}
+
+
+	/// <summary>
+	/// Проверяте получения списка покупателей.
+	/// </summary>
+	[Fact]
+	public async Task GetCustomerListAsync()
+	{
+		CheckCityIsNotNull();
+
+		var request = new GetCustomerListRequest(_auth, _crmTestData.CityId, 5);
+		var response = await _client.GetCustomerListAsync(request);
+
+		AssertResponseListSuccess(response);
+
+		// Проверка, что покупателей вернулось не больше запрошенного количества
+		Assert.True(response.Result!.Count <= 5);
 	}
 
 

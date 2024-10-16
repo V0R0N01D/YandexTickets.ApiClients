@@ -135,4 +135,18 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	{
 		return SendGetRequestAsync<OrderInfoResponse>(request.GetRequestPath(), ct);
 	}
+
+	/// <summary>
+	/// Возвращает список покупателей.
+	/// </summary>
+	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа вернёт CustomerListResponse,
+	/// содержащий статус ответа и список покупателей или ошибку.
+	/// </returns>
+	public Task<CustomerListResponse> GetCustomerListAsync(GetCustomerListRequest request,
+		CancellationToken ct = default)
+	{
+		return SendGetRequestAsync<CustomerListResponse>(request.GetRequestPath(), ct);
+	}
 }
