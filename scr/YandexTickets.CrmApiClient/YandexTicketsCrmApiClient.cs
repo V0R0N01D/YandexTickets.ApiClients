@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 using YandexTickets.Common;
+using YandexTickets.Common.Models.Responses;
 using YandexTickets.Common.Services.Exceptions;
 using YandexTickets.CrmApiClient.Models.Requests;
 using YandexTickets.CrmApiClient.Models.Responses;
@@ -97,5 +98,10 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	{
 		return SendPostRequestAsync<UnsubscribeCustomerResponse>(request.GetRequestPath(),
 			null, cancellationToken);
+	}
+
+	public Task<SoldTicketsResponse> GetSoldTicketsAsync(GetSoldTicketsRequest request, CancellationToken cancellationToken = default)
+	{
+		return SendGetRequestAsync<SoldTicketsResponse>(request.GetRequestPath(), cancellationToken);
 	}
 }

@@ -220,6 +220,17 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 	}
 
 
+	[Fact(DisplayName = "Получение списка проданных билетов")]
+	public async Task GetSoldTicketListAsync()
+	{
+		ValidateCityId();
+
+		var request = new GetSoldTicketsRequest(_auth, _crmTestData.CityId);
+		var response = await _client.GetSoldTicketsAsync(request);
+
+		Assert.True(response.Status == ResponseStatus.Success, response.Error);
+		AssertResponseSuccess(response);
+	}
 
 	#region Вспомогательные методы
 	private void ValidateCityId()

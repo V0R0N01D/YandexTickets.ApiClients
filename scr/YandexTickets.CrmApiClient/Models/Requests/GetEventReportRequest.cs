@@ -13,15 +13,15 @@ public class GetEventReportRequest : RequestBaseWithCity
 	/// </summary>
 	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
-	/// <param name="eventIds">Один или несколько идентификаторов событий.</param>
-	public GetEventReportRequest(string auth, string cityId, params int[] eventIds)
+	/// <param name="eventsId">Один или несколько идентификаторов событий.</param>
+	public GetEventReportRequest(string auth, string cityId, params int[] eventsId)
 		: base(auth, cityId)
 	{
-		if (eventIds == null || eventIds.Length == 0)
-			throw new ArgumentNullException(nameof(eventIds),
+		if (eventsId == null || eventsId.Length == 0)
+			throw new ArgumentNullException(nameof(eventsId),
 				"Необходимо указать хотя бы один идентификатор события.");
 
-		EventIds = eventIds;
+		EventsId = eventsId;
 	}
 
 	protected override string Action => "crm.report.event";
@@ -30,5 +30,5 @@ public class GetEventReportRequest : RequestBaseWithCity
 	/// Идентификаторы событий.
 	/// </summary>
 	[QueryParameter("event_ids")]
-	public int[] EventIds { get; set; }
+	public int[] EventsId { get; set; }
 }

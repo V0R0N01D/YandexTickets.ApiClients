@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\DTO\" />
-  </ItemGroup>
-
 </Project>

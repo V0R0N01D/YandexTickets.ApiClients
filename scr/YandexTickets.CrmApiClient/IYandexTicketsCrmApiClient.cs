@@ -1,4 +1,5 @@
-﻿using YandexTickets.CrmApiClient.Models.Requests;
+﻿using YandexTickets.Common.Models.Responses;
+using YandexTickets.CrmApiClient.Models.Requests;
 using YandexTickets.CrmApiClient.Models.Responses;
 
 namespace YandexTickets.CrmApiClient;
@@ -105,4 +106,15 @@ public interface IYandexTicketsCrmApiClient
 	Task<UnsubscribeCustomerResponse> UnsubscribeCustomerAsync(UnsubscribeCustomerRequest request,
 		CancellationToken cancellationToken = default);
 
+	/// <summary>
+	/// Возвращает список проданных билетов.
+	/// </summary>
+	/// <remarks>Метод не описан в документации API.</remarks>
+	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <returns>
+	/// При наличии ответа вернёт SoldTicketsResponse,
+	/// содержащий статус ответа и список проданных билетов или ошибку.
+	/// </returns>
+	Task<SoldTicketsResponse> GetSoldTicketsAsync(GetSoldTicketsRequest request,
+		CancellationToken cancellationToken = default);
 }
