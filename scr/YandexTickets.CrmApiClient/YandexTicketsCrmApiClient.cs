@@ -26,14 +26,8 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		client.BaseAddress = new Uri(BaseUrl);
 	}
 
-	/// <summary>
-	/// Десериализует ответ полученный в запросе.
-	/// </summary>
-	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
-	/// <param name="content">Содержимое ответа.</param>
-	/// <returns>Десериализованный ответ.</returns>
 	protected override async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content,
-		CancellationToken ct)
+		CancellationToken cancellationToken)
 	{
 		var options = new JsonSerializerOptions();
 
@@ -44,123 +38,64 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		if (brokenAttribute != null)
 			options.Converters.Add(new SingleElementArrayConverterFactory());
 
-		var result = await content.ReadFromJsonAsync<TResponse>(options, ct);
+		var result = await content.ReadFromJsonAsync<TResponse>(options, cancellationToken);
 		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
 	}
 
-	/// <summary>
-	/// Возвращает список городов.
-	/// </summary>
-	/// <param name="request">Объект который содержит данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа, вернёт CityListResponse,
-	/// содержащий статус ответа и список городов или ошибку.
-	/// </returns>
+
 	public Task<CityListResponse> GetCityListAsync(GetCityListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<CityListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<CityListResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает список мероприятий.
-	/// </summary>
-	/// <param name="request">Объект который содержит данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа, вернёт ActivityListResponse,
-	/// содержащий статус ответа и список мероприятий или ошибку.
-	/// </returns>
+
 	public Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<ActivityListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<ActivityListResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает список всех событий. 
-	/// Чтобы получить список всех событий (сеансов) внутри конкретного мероприятия, 
-	/// нужно передать параметр ActivityId в GetEventListRequest. 
-	/// Чтобы получить информацию по конкретному событию, 
-	/// нужно передать параметр EventId в GetEventListRequest.
-	/// </summary>
-	/// <param name="request">Объект который содержит данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа, вернёт EventListResponse,
-	/// содержащий статус ответа и список событий или ошибку.
-	/// </returns>
 	public Task<EventListResponse> GetEventListAsync(GetEventListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает отчет о событиях.
-	/// </summary>
-	/// <param name="request">Объект который содержит данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа, вернёт EventReportResponse,
-	/// содержащий статус ответа и отчет о событиях или ошибку.
-	/// </returns>
 	public Task<EventReportResponse> GetEventReportAsync(GetEventReportRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<EventReportResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<EventReportResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает список заказов.
-	/// </summary>
-	/// <param name="request">Объект который содержит данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа, вернёт OrderListResponse,
-	/// содержащий статус ответа и список заказов или ошибку.
-	/// </returns>
 	public Task<OrderListResponse> GetOrderListAsync(GetOrderListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<OrderListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<OrderListResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает детали заказов.
-	/// </summary>
-	/// <param name="request">Объект, содержащий данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа вернёт OrderInfoResponse,
-	/// содержащий статус ответа и детали заказов или ошибку.
-	/// </returns>
 	public Task<OrderInfoResponse> GetOrderInfoAsync(GetOrderInfoRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<OrderInfoResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<OrderInfoResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает список покупателей.
-	/// </summary>
-	/// <param name="request">Объект, содержащий данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа вернёт CustomerListResponse,
-	/// содержащий статус ответа и список покупателей или ошибку.
-	/// </returns>
 	public Task<CustomerListResponse> GetCustomerListAsync(GetCustomerListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<CustomerListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<CustomerListResponse>(request.GetRequestPath(), cancellationToken);
 	}
 
-	/// <summary>
-	/// Возвращает список агентов.
-	/// </summary>
-	/// <param name="request">Объект, содержащий данные для запроса.</param>
-	/// <returns>
-	/// При наличии ответа вернёт AgentListResponse,
-	/// содержащий статус ответа и список агентов или ошибку.
-	/// </returns>
 	public Task<AgentListResponse> GetAgentListAsync(GetAgentListRequest request,
-		CancellationToken ct = default)
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<AgentListResponse>(request.GetRequestPath(), ct);
+		return SendGetRequestAsync<AgentListResponse>(request.GetRequestPath(), cancellationToken);
+	}
+
+	public Task<UnsubscribeCustomerResponse> UnsubscribeCustomerAsync(UnsubscribeCustomerRequest request,
+		CancellationToken cancellationToken = default)
+	{
+		return SendPostRequestAsync<UnsubscribeCustomerResponse>(request.GetRequestPath(),
+			null, cancellationToken);
 	}
 }

@@ -207,6 +207,20 @@ public class YandexTicketCrmClientIntegrationTests : IClassFixture<TestFixture>
 
 
 
+	[Fact(DisplayName = "Отписывает покупателей от рассылок в системе Яндекс Билеты.")]
+	public async Task UnsubscribeCustomerAsync()
+	{
+		ValidateCityId();
+
+		var request = new UnsubscribeCustomerRequest(_auth, _crmTestData.CityId, _crmTestData.Email);
+		var response = await _client.UnsubscribeCustomerAsync(request);
+
+		Assert.True(response.Status == ResponseStatus.Success, response.Error);
+		Assert.True(response.Result);
+	}
+
+
+
 	#region Вспомогательные методы
 	private void ValidateCityId()
 	{

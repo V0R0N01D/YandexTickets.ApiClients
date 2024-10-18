@@ -19,12 +19,28 @@ public abstract class YandexTicketsApiClientBase
 	/// <param name="requestPath">Путь запроса с параметрами.</param>
 	/// <returns>Десериализованный ответ от API.</returns>
 	protected async Task<TResponse> SendGetRequestAsync<TResponse>(string requestPath,
-		CancellationToken ct)
+		CancellationToken cancellationToken)
 	{
 		var response = await _httpClient.GetAsync(requestPath);
 		response.EnsureSuccessStatusCode();
 
-		return await DeserializeResponseAsync<TResponse>(response.Content, ct);
+		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken);
+	}
+
+	/// <summary>
+	/// Выполняет POST-запрос и возвращает десериализованный ответ.
+	/// </summary>
+	/// <typeparam name="TResponse">Тип ожидаемого ответа.</typeparam>
+	/// <param name="requestPath">Путь запроса с параметрами.</param>
+	/// <returns>Десериализованный ответ от API.</returns>
+	protected async Task<TResponse> SendPostRequestAsync<TResponse>(string requestPath,
+		HttpContent? content,
+		CancellationToken cancellationToken)
+	{
+		var response = await _httpClient.PostAsync(requestPath, content, cancellationToken);
+		response.EnsureSuccessStatusCode();
+
+		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken);
 	}
 
 	/// <summary>
@@ -34,9 +50,9 @@ public abstract class YandexTicketsApiClientBase
 	/// <param name="content">Содержимое ответа.</param>
 	/// <returns>Десериализованный ответ.</returns>
 	protected virtual async Task<TResponse> DeserializeResponseAsync<TResponse>(HttpContent content,
-		CancellationToken ct)
+		CancellationToken cancellationToken)
 	{
-		var result = await content.ReadFromJsonAsync<TResponse>(ct);
+		var result = await content.ReadFromJsonAsync<TResponse>(cancellationToken);
 		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
 	}
 }
