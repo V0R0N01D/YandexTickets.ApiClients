@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections;
 using System.Reflection;
-using System.Text;
 using YandexTickets.Common.Services.Attributes;
 using YandexTickets.Common.Services.Converters.Request;
-using YandexTickets.Common.Services.Exceptions;
 
 namespace YandexTickets.Common.Models.Requests;
 
@@ -14,6 +10,8 @@ namespace YandexTickets.Common.Models.Requests;
 /// </summary>
 public abstract class RequestBase
 {
+	private static readonly Dictionary<Type, List<PropertyMetadata>> _cachedProperties = new();
+
 	/// <summary>
 	/// Конструктор базового запроса с указанием идентификатора внешней системы.
 	/// </summary>
@@ -41,25 +39,22 @@ public abstract class RequestBase
 	public string GetRequestPath()
 	{
 		var type = this.GetType();
-		var propeties = type.GetProperties();
+		if (!_cachedProperties.TryGetValue(type, out var propertiesMetadata))
+		{
+			propertiesMetadata = GetPropertiesMetadata(type);
+			_cachedProperties[type] = propertiesMetadata;
+		}
 
 		Dictionary<string, string> queryParams = new()
 		{
 			{ "action", Action }
 		};
 
-		foreach (var property in propeties)
+		foreach (var metadata in propertiesMetadata)
 		{
-			var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
-
-			if (attribute is null)
-				continue;
-
-			var converterAttribute = property.GetCustomAttribute<QueryParameterConverterAttribute>();
-			var converter = GetConverter(converterAttribute?.ConverterType);
-
-			AddQueryParam(queryParams, attribute.Title, property.GetValue(this),
-				attribute.IsRequired, converter);
+			var value = metadata.PropertyInfo.GetValue(this);
+			AddQueryParam(queryParams, metadata.Attribute.Title, value,
+				metadata.Attribute.IsRequired, metadata.Converter);
 		}
 
 		return QueryHelpers.AddQueryString("?", queryParams!);
@@ -85,7 +80,7 @@ public abstract class RequestBase
 	/// <param name="title">Название параметра</param>
 	/// <param name="value">Значение параметра</param>
 	/// <param name="isRequired">Является ли параметр обязательным</param>
-	/// <param name="converterType">Конвертер для обработки значения параметра</param>
+	/// <param name="converter">Конвертер для обработки значения параметра</param>
 	private static void AddQueryParam(Dictionary<string, string> dictionary, string title,
 		object? value, bool isRequired = false, IQueryParameterConverter? converter = null)
 	{
@@ -110,5 +105,46 @@ public abstract class RequestBase
 		}
 
 		dictionary.TryAdd(title, strValue);
+	}
+
+	/// <summary>
+	/// Получает метаданные свойств для заданного типа и кэширует их.
+	/// </summary>
+	/// <param name="type">Тип запроса</param>
+	/// <returns>Список метаданных свойств.</returns>
+	private List<PropertyMetadata> GetPropertiesMetadata(Type type)
+	{
+		var propertiesMetadata = new List<PropertyMetadata>();
+
+		var properties = type.GetProperties();
+
+		foreach (var property in properties)
+		{
+			var attribute = property.GetCustomAttribute<QueryParameterAttribute>();
+			if (attribute is null)
+				continue;
+
+			var converterAttribute = property.GetCustomAttribute<QueryParameterConverterAttribute>();
+			var converter = GetConverter(converterAttribute?.ConverterType);
+
+			propertiesMetadata.Add(new PropertyMetadata
+			{
+				PropertyInfo = property,
+				Attribute = attribute,
+				Converter = converter
+			});
+		}
+
+		return propertiesMetadata;
+	}
+
+	/// <summary>
+	/// Класс для хранения метаданных свойств.
+	/// </summary>
+	private class PropertyMetadata
+	{
+		public required PropertyInfo PropertyInfo { get; set; }
+		public required QueryParameterAttribute Attribute { get; set; }
+		public IQueryParameterConverter? Converter { get; set; }
 	}
 }
