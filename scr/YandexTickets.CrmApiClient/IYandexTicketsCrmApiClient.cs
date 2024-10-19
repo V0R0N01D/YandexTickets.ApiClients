@@ -10,6 +10,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает список городов.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа, вернёт CityListResponse,
 	/// содержащий статус ответа и список городов или ошибку.
@@ -21,6 +22,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает список мероприятий.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа, вернёт ActivityListResponse,
 	/// содержащий статус ответа и список мероприятий или ошибку.
@@ -36,6 +38,7 @@ public interface IYandexTicketsCrmApiClient
 	/// нужно передать параметр EventId в GetEventListRequest.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа, вернёт EventListResponse,
 	/// содержащий статус ответа и список событий или ошибку.
@@ -47,6 +50,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает отчет о событиях.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа, вернёт EventReportResponse,
 	/// содержащий статус ответа и отчет о событиях или ошибку.
@@ -58,6 +62,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает список заказов.
 	/// </summary>
 	/// <param name="request">Объект который содержит данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа, вернёт OrderListResponse,
 	/// содержащий статус ответа и список заказов или ошибку.
@@ -69,6 +74,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает детали заказов.
 	/// </summary>
 	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа вернёт OrderInfoResponse,
 	/// содержащий статус ответа и детали заказов или ошибку.
@@ -80,6 +86,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает список покупателей.
 	/// </summary>
 	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа вернёт CustomerListResponse,
 	/// содержащий статус ответа и список покупателей или ошибку.
@@ -91,6 +98,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Возвращает список агентов.
 	/// </summary>
 	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа вернёт AgentListResponse,
 	/// содержащий статус ответа и список агентов или ошибку.
@@ -102,6 +110,7 @@ public interface IYandexTicketsCrmApiClient
 	/// Отписывает покупателя от рассылок в системе Яндекс Билеты. 
 	/// </summary>
 	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>Ответ, содержащий статус выполнения операции.</returns>
 	Task<UnsubscribeCustomerResponse> UnsubscribeCustomerAsync(UnsubscribeCustomerRequest request,
 		CancellationToken cancellationToken = default);
@@ -111,6 +120,7 @@ public interface IYandexTicketsCrmApiClient
 	/// </summary>
 	/// <remarks>Метод не описан в документации API.</remarks>
 	/// <param name="request">Объект, содержащий данные для запроса.</param>
+	/// <param name="cancellationToken">Токен отмены операции.</param>
 	/// <returns>
 	/// При наличии ответа вернёт SoldTicketsResponse,
 	/// содержащий статус ответа и список проданных билетов или ошибку.

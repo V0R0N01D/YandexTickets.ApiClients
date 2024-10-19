@@ -1,16 +1,16 @@
 ﻿namespace YandexTickets.Common.Services.Attributes;
 
 /// <summary>
-/// Атрибут для задания пользовательского имени параметра запроса 
+/// Атрибут для задания пользовательского названия параметра запроса 
 /// и указания является ли параметр обязательным.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public class QueryParameterAttribute : Attribute
 {
 	/// <summary>
-	/// Имя параметра запроса.
+	/// Название параметра запроса.
 	/// </summary>
-	public string Name { get; }
+	public string Title { get; }
 
 	/// <summary>
 	/// Является ли параметр обязательным.
@@ -20,11 +20,11 @@ public class QueryParameterAttribute : Attribute
 	/// <summary>
 	/// Инициализирует новый экземпляр атрибута с заданным именем параметра.
 	/// </summary>
-	/// <param name="name">Имя параметра запроса.</param>
+	/// <param name="title">Название параметра запроса.</param>
 	/// <param name="isRequired">Является ли параметр обязательным. (По умолчанию true)</param>
-	public QueryParameterAttribute(string name, bool isRequired = true)
+	public QueryParameterAttribute(string title, bool isRequired = true)
 	{
-		Name = name;
+		Title = title;
 		IsRequired = isRequired;
 	}
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Converters.Request;
 using YandexTickets.Common.Services.Exceptions;
 
 namespace YandexTickets.Common.Models.Requests;
@@ -53,12 +55,27 @@ public abstract class RequestBase
 			if (attribute is null)
 				continue;
 
-			string paramName = attribute.Name;
+			var converterAttribute = property.GetCustomAttribute<QueryParameterConverterAttribute>();
+			var converter = GetConverter(converterAttribute?.ConverterType);
 
-			AddQueryParam(queryParams, paramName, property.GetValue(this), attribute.IsRequired);
+			AddQueryParam(queryParams, attribute.Title, property.GetValue(this),
+				attribute.IsRequired, converter);
 		}
 
 		return QueryHelpers.AddQueryString("?", queryParams!);
+	}
+
+	/// <summary>
+	/// Создание конвертера
+	/// </summary>
+	/// <param name="converterType">Тип конвертера</param>
+	/// <returns>Конвертор</returns>
+	private IQueryParameterConverter? GetConverter(Type? converterType)
+	{
+		if (converterType != null)
+			return (IQueryParameterConverter)Activator.CreateInstance(converterType)!;
+
+		return null;
 	}
 
 	/// <summary>
@@ -68,8 +85,9 @@ public abstract class RequestBase
 	/// <param name="title">Название параметра</param>
 	/// <param name="value">Значение параметра</param>
 	/// <param name="isRequired">Является ли параметр обязательным</param>
+	/// <param name="converterType">Конвертер для обработки значения параметра</param>
 	private static void AddQueryParam(Dictionary<string, string> dictionary, string title,
-		object? value, bool isRequired = false)
+		object? value, bool isRequired = false, IQueryParameterConverter? converter = null)
 	{
 		if (value is null)
 		{
@@ -79,34 +97,9 @@ public abstract class RequestBase
 			return;
 		}
 
-		string? strValue;
-
-		if (value is DateOnly dateOnlyValue)
-		{
-			// Форматирование DateOnly в строку формата "yyyy-MM-dd"
-			strValue = dateOnlyValue.ToString("yyyy-MM-dd");
-		}
-		else if (value is Enum enumValue)
-		{
-			strValue = Convert.ToInt32(enumValue).ToString();
-		}
-		else if (value is IEnumerable enumerable && value is not string)
-		{
-			// Формирование строки в формате "value,value..."
-			var values = new List<string?>();
-
-			foreach (var item in enumerable)
-			{
-				if (item != null)
-					values.Add(item.ToString());
-			}
-
-			strValue = string.Join(',', values);
-		}
-		else
-		{
-			strValue = value.ToString();
-		}
+		string? strValue = converter is null
+			? value.ToString()
+			: converter.Convert(value);
 
 		if (string.IsNullOrWhiteSpace(strValue))
 		{

@@ -1,5 +1,6 @@
 ﻿using YandexTickets.Common.Models.Requests;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Converters.Request;
 
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
@@ -33,11 +34,13 @@ public class GetSoldTicketsRequest : RequestBaseWithCity
 	/// Дата начиная с которой (включительно) билеты возвращаются в ответе.
 	/// </summary>
 	[QueryParameter("start_date", false)]
+	[QueryParameterConverter(typeof(DateOnlyConverter))]
 	public DateOnly? StartDate { get; set; }
 
 	/// <summary>
 	/// Дата до которой (включительно) билеты возвращаются в ответе.
 	/// </summary>
 	[QueryParameter("end_date", false)]
+	[QueryParameterConverter(typeof(DateOnlyConverter))]
 	public DateOnly? EndDate { get; set; }
 }

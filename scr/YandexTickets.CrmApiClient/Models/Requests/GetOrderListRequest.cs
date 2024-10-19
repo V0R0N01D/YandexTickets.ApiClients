@@ -1,6 +1,7 @@
 ﻿using YandexTickets.Common.Models.Enums;
 using YandexTickets.Common.Models.Requests;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Converters.Request;
 
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
@@ -40,17 +41,20 @@ public class GetOrderListRequest : RequestBaseWithCity
 	/// Дата операции начиная с которой (включительно) заказы возвращаются в ответе.
 	/// </summary>
 	[QueryParameter("start_date", false)]
+	[QueryParameterConverter(typeof(DateOnlyConverter))]
 	public DateOnly? StartDate { get; set; }
 
 	/// <summary>
 	/// Дата операции до которой (включительно) заказы возвращаются в ответе.
 	/// </summary>
 	[QueryParameter("end_date", false)]
+	[QueryParameterConverter(typeof(DateOnlyConverter))]
 	public DateOnly? EndDate { get; set; }
 
 	/// <summary>
 	/// Статус заказа.
 	/// </summary>
 	[QueryParameter("status", false)]
+	[QueryParameterConverter(typeof(EnumConverter))]
 	public OrderStatus? Status { get; set; }
 }

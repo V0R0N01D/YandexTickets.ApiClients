@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using YandexTickets.Common.Services.Converters;
+using YandexTickets.Common.Services.Converters.Response;
 
 namespace YandexTickets.Common.Models.DTO;
 

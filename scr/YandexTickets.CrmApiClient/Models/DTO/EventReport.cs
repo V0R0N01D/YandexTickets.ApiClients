@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using YandexTickets.Common.Models.Enums;
-using YandexTickets.Common.Services.Converters;
+using YandexTickets.Common.Services.Converters.Response;
 
 namespace YandexTickets.CrmApiClient.Models.DTO;
 

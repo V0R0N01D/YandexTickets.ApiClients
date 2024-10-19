@@ -1,5 +1,6 @@
 ﻿using YandexTickets.Common.Models.Requests;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Converters.Request;
 
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
@@ -30,5 +31,6 @@ public class GetOrderInfoRequest : RequestBaseWithCity
 	/// Идентификаторы заказов.
 	/// </summary>
 	[QueryParameter("order_id")]
+	[QueryParameterConverter(typeof(EnumerableConverter))]
 	public int[] OrdersId { get; set; }
 }

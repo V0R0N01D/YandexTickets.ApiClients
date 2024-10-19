@@ -1,5 +1,6 @@
 ﻿using YandexTickets.Common.Models.Requests;
 using YandexTickets.Common.Services.Attributes;
+using YandexTickets.Common.Services.Converters.Request;
 
 namespace YandexTickets.CrmApiClient.Models.Requests;
 
@@ -30,5 +31,6 @@ public class GetEventReportRequest : RequestBaseWithCity
 	/// Идентификаторы событий.
 	/// </summary>
 	[QueryParameter("event_ids")]
+	[QueryParameterConverter(typeof(EnumerableConverter))]
 	public int[] EventsId { get; set; }
 }
