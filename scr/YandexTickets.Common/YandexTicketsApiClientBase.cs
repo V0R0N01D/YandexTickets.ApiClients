@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using YandexTickets.Common.Models.Requests;
+using YandexTickets.Common.Services;
 using YandexTickets.Common.Services.Exceptions;
 
 namespace YandexTickets.Common;
@@ -23,10 +25,12 @@ public abstract class YandexTicketsApiClientBase
 		CancellationToken cancellationToken)
 
 	{
-		var response = await _httpClient.GetAsync(requestPath);
+		var response = await _httpClient.GetAsync(requestPath, cancellationToken)
+			.ConfigureAwait(false);
 		response.EnsureSuccessStatusCode();
 
-		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken);
+		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken)
+			.ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -41,10 +45,12 @@ public abstract class YandexTicketsApiClientBase
 		HttpContent? content,
 		CancellationToken cancellationToken)
 	{
-		var response = await _httpClient.PostAsync(requestPath, content, cancellationToken);
+		var response = await _httpClient.PostAsync(requestPath, content, cancellationToken)
+			.ConfigureAwait(false);
 		response.EnsureSuccessStatusCode();
 
-		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken);
+		return await DeserializeResponseAsync<TResponse>(response.Content, cancellationToken)
+			.ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -58,7 +64,17 @@ public abstract class YandexTicketsApiClientBase
 		CancellationToken cancellationToken)
 
 	{
-		var result = await content.ReadFromJsonAsync<TResponse>(cancellationToken);
+		var result = await content.ReadFromJsonAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
+	}
+
+	/// <summary>
+	/// Получение строки запроса из класса запроса
+	/// </summary>
+	/// <param name="request">Класс запроса</param>
+	/// <returns>Строка запроса</returns>
+	protected string GetRequestString(RequestBase request)
+	{
+		return request.GetRequestPath();
 	}
 }

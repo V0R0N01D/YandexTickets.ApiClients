@@ -12,8 +12,14 @@ public static class AuthService
 	/// <param name="login">Логин пользователя.</param>
 	/// <param name="password">Пароль пользователя.</param>
 	/// <returns>Строка сгенерированного ключа авторизации.</returns>
+	/// <exception cref="ArgumentException"></exception>
 	public static string GenerateAuthToken(string login, string password)
 	{
+		if (string.IsNullOrWhiteSpace(login))
+			throw new ArgumentException("Логин не может быть пустым.", nameof(login));
+		if (string.IsNullOrWhiteSpace(password))
+			throw new ArgumentException("Пароль не может быть пустым.", nameof(password));
+
 		var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 		var passwordMd5 = GetMd5Hash(password);
 		var hashInput = passwordMd5 + timestamp;

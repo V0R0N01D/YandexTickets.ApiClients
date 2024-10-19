@@ -39,7 +39,8 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 		if (brokenAttribute != null)
 			options.Converters.Add(new SingleElementArrayConverterFactory());
 
-		var result = await content.ReadFromJsonAsync<TResponse>(options, cancellationToken);
+		var result = await content.ReadFromJsonAsync<TResponse>(options, cancellationToken)
+			.ConfigureAwait(false);
 		return result ?? throw new YandexTicketsException("Получен пустой ответ от сервера.");
 	}
 
@@ -47,61 +48,62 @@ public class YandexTicketsCrmApiClient : YandexTicketsApiClientBase, IYandexTick
 	public Task<CityListResponse> GetCityListAsync(GetCityListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<CityListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<CityListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 
 	public Task<ActivityListResponse> GetActivityListAsync(GetActivityListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<ActivityListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<ActivityListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<EventListResponse> GetEventListAsync(GetEventListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<EventListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<EventListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<EventReportResponse> GetEventReportAsync(GetEventReportRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<EventReportResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<EventReportResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<OrderListResponse> GetOrderListAsync(GetOrderListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<OrderListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<OrderListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<OrderInfoResponse> GetOrderInfoAsync(GetOrderInfoRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<OrderInfoResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<OrderInfoResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<CustomerListResponse> GetCustomerListAsync(GetCustomerListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<CustomerListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<CustomerListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<AgentListResponse> GetAgentListAsync(GetAgentListRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<AgentListResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<AgentListResponse>(GetRequestString(request), cancellationToken);
 	}
 
 	public Task<UnsubscribeCustomerResponse> UnsubscribeCustomerAsync(UnsubscribeCustomerRequest request,
 		CancellationToken cancellationToken = default)
 	{
-		return SendPostRequestAsync<UnsubscribeCustomerResponse>(request.GetRequestPath(),
+		return SendPostRequestAsync<UnsubscribeCustomerResponse>(GetRequestString(request),
 			null, cancellationToken);
 	}
 
-	public Task<SoldTicketsResponse> GetSoldTicketsAsync(GetSoldTicketsRequest request, CancellationToken cancellationToken = default)
+	public Task<SoldTicketsResponse> GetSoldTicketsAsync(GetSoldTicketsRequest request,
+		CancellationToken cancellationToken = default)
 	{
-		return SendGetRequestAsync<SoldTicketsResponse>(request.GetRequestPath(), cancellationToken);
+		return SendGetRequestAsync<SoldTicketsResponse>(GetRequestString(request), cancellationToken);
 	}
 }
