@@ -3,7 +3,7 @@
 namespace YandexTickets.ApiClients.Common.Models.Requests;
 
 /// <summary>
-/// Класс запроса дополнительно содержащий идентификатор города.
+/// Базовый класс запроса дополнительно содержащий идентификатор города.
 /// </summary>
 public abstract class RequestBaseWithCity : RequestBase
 {

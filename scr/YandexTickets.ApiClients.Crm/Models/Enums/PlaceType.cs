@@ -1,11 +1,21 @@
 ﻿namespace YandexTickets.ApiClients.Crm.Models.Enums;
 
 /// <summary>
-/// Тип места. <br/><br/>
-/// Возможные значения: <br/>
-/// Unnumbered - Ненумерованное; <br/>
-/// Numbered - Нумерованное; <br/>
+/// Определяет тип места.
 /// </summary>
+/// <remarks>
+/// Возможные значения:
+/// <list type="bullet">
+/// <item>
+/// <term>Unnumbered</term>
+/// <description>Ненумерованное</description>
+/// </item>
+/// <item>
+/// <term>Numbered</term>
+/// <description>Нумерованное</description>
+/// </item>
+/// </list>
+/// </remarks>
 public enum PlaceType
 {
 	/// <summary>

@@ -1,14 +1,33 @@
 ﻿namespace YandexTickets.ApiClients.Crm.Models.Enums;
 
 /// <summary>
-/// Тип продажи заказа. <br/><br/>
-/// Значения: <br/>
-/// Annulate - Аннулирован; <br/>
-/// Invitation - Пригласительные по 0 рублей; <br/>
-/// CashRegister - В кассе; <br/>
-/// PersonalAccount - В личном кабинете; <br/>
-/// Gateway - По шлюзу; <br/>
+/// Определяет тип продажи заказа.
 /// </summary>
+/// <remarks>
+/// Возможные значения:
+/// <list type="bullet">
+/// <item>
+/// <term>Annulate</term>
+/// <description>Аннулирован</description>
+/// </item>
+/// <item>
+/// <term>Invitation</term>
+/// <description>Пригласительные по 0 рублей</description>
+/// </item>
+/// <item>
+/// <term>CashRegister</term>
+/// <description>Продажа в кассе</description>
+/// </item>
+/// <item>
+/// <term>PersonalAccount</term>
+/// <description>Продажа в личном кабинете</description>
+/// </item>
+/// <item>
+/// <term>Gateway</term>
+/// <description>Продажа по шлюзу</description>
+/// </item>
+/// </list>
+/// </remarks>
 public enum SaleType
 {
 	/// <summary>

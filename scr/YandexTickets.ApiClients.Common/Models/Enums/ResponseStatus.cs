@@ -3,16 +3,26 @@
 namespace YandexTickets.ApiClients.Common.Models.Enums;
 
 /// <summary>
-/// Статус ответа. <br/><br/>
-/// Значения: <br/>
-/// Success - Запрос выполнен; <br/>
-/// Failed - Произошла ошибка <br/>
+/// Статус ответа.
 /// </summary>
+/// <remarks>
+/// Возможные значения:
+/// <list type="bullet">
+/// <item>
+/// <term>Success</term>
+/// <description>Запрос выполнен успешно</description>
+/// </item>
+/// <item>
+/// <term>Failed</term>
+/// <description>Произошла ошибка</description>
+/// </item>
+/// </list>
+/// </remarks>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ResponseStatus
 {
 	/// <summary>
-	/// Запрос выполнен
+	/// Запрос выполнен успешно
 	/// </summary>
 	Success,
 

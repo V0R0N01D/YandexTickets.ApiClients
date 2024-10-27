@@ -1,13 +1,29 @@
 ﻿namespace YandexTickets.ApiClients.Common.Models.Enums;
 
 /// <summary>
-/// Статус заказа. <br/><br/>
-/// Значения: <br/>
-/// Annulate - Аннулирован; <br/>
-/// Sale - Продан; <br/>
-/// Booking - Бронь; <br/>
-/// Delivery - Доставка; <br/>
+/// Статус заказа.
 /// </summary>
+/// <remarks>
+/// Возможные значения:
+/// <list type="bullet">
+/// <item>
+/// <term>Annulate</term>
+/// <description>Аннулирован</description>
+/// </item>
+/// <item>
+/// <term>Sale</term>
+/// <description>Продан</description>
+/// </item>
+/// <item>
+/// <term>Booking</term>
+/// <description>Бронь</description>
+/// </item>
+/// <item>
+/// <term>Delivery</term>
+/// <description>Доставка</description>
+/// </item>
+/// </list>
+/// </remarks>
 public enum OrderStatus
 {
 	/// <summary>

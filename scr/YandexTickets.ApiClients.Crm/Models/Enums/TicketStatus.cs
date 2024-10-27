@@ -3,11 +3,21 @@
 namespace YandexTickets.ApiClients.Crm.Models.Enums;
 
 /// <summary>
-/// Статус билета. <br/><br/>
-/// Возможные значения: <br/>
-/// Annulate - Аннулирован; <br/>
-/// Active - Активен; <br/>
+/// Определяет статус билета.
 /// </summary>
+/// <remarks>
+/// Возможные значения:
+/// <list type="bullet">
+/// <item>
+/// <term>Annulate</term>
+/// <description>Аннулирован</description>
+/// </item>
+/// <item>
+/// <term>Active</term>
+/// <description>Активен</description>
+/// </item>
+/// </list>
+/// </remarks>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TicketStatus
 {
