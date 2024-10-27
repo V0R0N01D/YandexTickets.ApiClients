@@ -1,0 +1,12 @@
+{
+  // Для работы переименовать файл в agent_settings.json
+  "AgentTestData": {
+    // Данные для доступа к api
+    "Login": "login",
+    "Password": "password",
+
+    // Идентификатор города, можно получить в тесте GetCityListAsync
+    // (Необходим для всех тестов, кроме GetCityListAsync)
+    "CityId": 123
+  }
+}

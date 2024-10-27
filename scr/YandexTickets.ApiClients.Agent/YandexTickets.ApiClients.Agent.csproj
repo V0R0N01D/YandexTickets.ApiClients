@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPublishable>True</IsPublishable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Smirnov Nikita</Authors>
+    <PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
+    <PackageTags>Yandex; Tickets; API; Agent; Client; Ticketing; Яндекс; Билеты; Интеграция</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>0.0.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\YandexTickets.ApiClients.Common\YandexTickets.ApiClients.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\DTO\" />
+  </ItemGroup>
+
+</Project>
