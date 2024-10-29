@@ -1,20 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Authors>Smirnov Nikita</Authors>
-    <PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Copyright></Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>This package contains shared utilities, models, and services required by the Yandex Tickets CRM and Agent API clients.</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Smirnov Nikita</Authors>
+		<PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Copyright></Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>This package contains shared utilities, models, and services required by the Yandex Tickets CRM and Agent API clients.</Description>
+		<Version>1.0.2</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.10" />
+	</ItemGroup>
 
 </Project>

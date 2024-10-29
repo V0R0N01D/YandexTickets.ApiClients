@@ -20,7 +20,12 @@ public class GetSoldTicketsRequest : RequestBaseWithCity
 	/// <param name="endDate">Дата до которой (включительно) билеты возвращаются в ответе.</param>
 	public GetSoldTicketsRequest(string auth, int cityId, int? eventId = null,
 		DateOnly? startDate = null, DateOnly? endDate = null)
-		: base(auth, cityId) { }
+		: base(auth, cityId)
+	{
+		EventId = eventId;
+		StartDate = startDate;
+		EndDate = endDate;
+	}
 
 	protected override string Action => "crm.order.ticket.list";
 

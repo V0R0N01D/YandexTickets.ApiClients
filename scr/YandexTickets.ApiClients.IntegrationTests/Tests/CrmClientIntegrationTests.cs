@@ -37,7 +37,7 @@ public class CrmClientIntegrationTests
 		AssertResponseSuccess(response);
 	}
 
-
+	#region Тесты получения списка событий
 	[Fact(DisplayName = "Получение списка событий")]
 	public async Task GetEventListAsync()
 	{
@@ -46,6 +46,26 @@ public class CrmClientIntegrationTests
 
 		AssertResponseSuccess(response);
 	}
+
+	[Fact(DisplayName = "Получение списка событий с фильтрацией по датам")]
+	public async Task GetEventListWithDatesParamAsync()
+	{
+		var startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-2));
+		var endDate = DateOnly.FromDateTime(DateTime.Now);
+
+		var request = new GetEventListRequest(_auth, GetCityId(), startDate: startDate, endDate: endDate);
+		var response = await _client.GetEventListAsync(request);
+
+		AssertResponseSuccess(response);
+
+		Assert.All(response.Result!, currentEvent =>
+		{
+			Assert.True(currentEvent.Date >= startDate.ToDateTime(TimeOnly.MinValue)
+				&& currentEvent.Date <= endDate.ToDateTime(TimeOnly.MaxValue),
+				$"Событие с идентификатором {currentEvent.Id} имеет дату {currentEvent.Date}, которая выходит за пределы указанного диапазона ({startDate} - {endDate}).");
+		});
+	}
+	#endregion
 
 
 	[Fact(DisplayName = "Получение отчета по событиям")]

@@ -111,7 +111,7 @@ public record SeasonPlace
 	public required string Barcode { get; set; }
 
 	/// <summary>
-	/// Мастер-место (может быть null).
+	/// Мастер-место.
 	/// </summary>
 	[JsonPropertyName("master_seat")]
 	public object? MasterSeat { get; set; }

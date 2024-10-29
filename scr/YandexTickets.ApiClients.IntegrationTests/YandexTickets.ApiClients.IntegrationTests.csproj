@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\YandexTickets.ApiClients.Agent\YandexTickets.ApiClients.Agent.csproj" />
-	  <ProjectReference Include="..\YandexTickets.ApiClients.Common\YandexTickets.ApiClients.Common.csproj" />
 	  <ProjectReference Include="..\YandexTickets.ApiClients.Crm\YandexTickets.ApiClients.Crm.csproj" />
 	</ItemGroup>
 

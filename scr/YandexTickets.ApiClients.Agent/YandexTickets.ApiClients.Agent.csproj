@@ -15,11 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YandexTickets.ApiClients.Common\YandexTickets.ApiClients.Common.csproj" />
+    <Folder Include="Models\DTO\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTO\" />
+    <PackageReference Include="YandexTickets.ApiClients.Common" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

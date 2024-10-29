@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Authors>Smirnov Nikita</Authors>
-    <Company></Company>
-    <Description>This library provides a .NET client for interacting with the Yandex Tickets CRM API. It simplifies integration by offering strongly-typed methods and models for accessing ticketing data.</Description>
-    <PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
-    <PackageTags>Yandex; Tickets; API; CRM; Client; Ticketing; Яндекс; Билеты; Интеграция</PackageTags>
-    <PackageReleaseNotes>The first release of the Yandex.Tickets CRM API client.</PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Authors>Smirnov Nikita</Authors>
+		<Company></Company>
+		<Description>This library provides a .NET client for interacting with the Yandex Tickets CRM API. It simplifies integration by offering strongly-typed methods and models for accessing ticketing data.</Description>
+		<PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
+		<PackageTags>Yandex; Tickets; API; CRM; Client; Ticketing; Яндекс; Билеты; Интеграция</PackageTags>
+		<PackageReleaseNotes>The first release of the Yandex.Tickets CRM API client.</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<NoWin32Manifest>true</NoWin32Manifest>
+		<Version>1.0.3</Version>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\YandexTickets.ApiClients.Common\YandexTickets.ApiClients.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="YandexTickets.ApiClients.Common" Version="1.0.2" />
+	</ItemGroup>
 
 </Project>

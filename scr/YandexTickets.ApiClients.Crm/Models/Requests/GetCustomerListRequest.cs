@@ -25,8 +25,9 @@ public class GetCustomerListRequest : RequestBaseWithCity
 	protected override string Action => "crm.customer.list";
 
 	/// <summary>
-	/// Максимальное количество возвращаемых объектов. Выдается не больше 1000 покупателей.
+	/// Максимальное количество возвращаемых объектов.
 	/// </summary>
+	/// <remarks>Выдается не больше 1000 покупателей.</remarks>
 	[QueryParameter("limit", false)]
 	public int? Limit { get; set; }
 

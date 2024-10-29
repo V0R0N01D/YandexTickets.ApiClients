@@ -25,8 +25,9 @@ public class GetAgentListRequest : RequestBaseWithCity
 	protected override string Action => "crm.agent.list";
 
 	/// <summary>
-	/// Максимальное количество возвращаемых объектов. Выдается не больше 1000 агентов.
+	/// Максимальное количество возвращаемых объектов.
 	/// </summary>
+	/// <remarks>Выдается не больше 1000 агентов.</remarks>
 	[QueryParameter("limit", false)]
 	public int? Limit { get; set; }
 
