@@ -12,7 +12,6 @@ public class GetEventListRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор класса запроса списка событий.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="activityId">Идентификатор мероприятия.</param>
 	/// <param name="eventId">Идентификатор события.</param>
@@ -23,9 +22,9 @@ public class GetEventListRequest : RequestBaseWithCity
 	/// (Параметр отсутствует в документации API)
 	/// </param>
 
-	public GetEventListRequest(string auth, int cityId, int? activityId = null, int? eventId = null,
+	public GetEventListRequest(int cityId, int? activityId = null, int? eventId = null,
 		DateOnly? startDate = null, DateOnly? endDate = null)
-		: base(auth, cityId)
+		: base(cityId)
 	{
 		ActivityId = activityId;
 		EventId = eventId;
@@ -33,6 +32,7 @@ public class GetEventListRequest : RequestBaseWithCity
 		EndDate = endDate;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.event.list";
 
 	/// <summary>

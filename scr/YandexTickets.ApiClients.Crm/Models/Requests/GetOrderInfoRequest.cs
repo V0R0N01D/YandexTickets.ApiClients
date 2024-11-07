@@ -12,11 +12,10 @@ public class GetOrderInfoRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор запроса для получения деталей заказа.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="ordersId">Один или несколько идентификаторов заказов.</param>
-	public GetOrderInfoRequest(string auth, int cityId, params int[] ordersId)
-		: base(auth, cityId)
+	public GetOrderInfoRequest(int cityId, params int[] ordersId)
+		: base(cityId)
 	{
 		if (ordersId == null || ordersId.Length == 0)
 			throw new ArgumentNullException(nameof(ordersId),
@@ -25,6 +24,7 @@ public class GetOrderInfoRequest : RequestBaseWithCity
 		OrdersId = ordersId;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.order.info";
 
 	/// <summary>

@@ -8,23 +8,23 @@ namespace YandexTickets.ApiClients.Crm.Models.Requests;
 /// </summary>
 public class UnsubscribeCustomerRequest : RequestBaseWithCity
 {
-	/// <summary>
-	/// Конструктор запроса для отписки покупателя от рассылок.
-	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
-	/// <param name="cityId">Идентификатор города.</param>
-	/// <param name="email">Электронная почта покупателя для отписки.</param>
-	public UnsubscribeCustomerRequest(string auth, int cityId, string email)
-		: base(auth, cityId)
-	{
-		Email = email;
-	}
+    /// <summary>
+    /// Конструктор запроса для отписки покупателя от рассылок.
+    /// </summary>
+    /// <param name="cityId">Идентификатор города.</param>
+    /// <param name="email">Электронная почта покупателя для отписки.</param>
+    public UnsubscribeCustomerRequest(int cityId, string email)
+        : base(cityId)
+    {
+        Email = email;
+    }
 
-	protected override string Action => "crm.customer.unsubscribe";
+    /// <inheritdoc />
+    protected override string Action => "crm.customer.unsubscribe";
 
-	/// <summary>
-	/// Электронная почта покупателя для отписки.
-	/// </summary>
-	[QueryParameter("email")]
-	public string Email { get; set; }
+    /// <summary>
+    /// Электронная почта покупателя для отписки.
+    /// </summary>
+    [QueryParameter("email")]
+    public string Email { get; set; }
 }

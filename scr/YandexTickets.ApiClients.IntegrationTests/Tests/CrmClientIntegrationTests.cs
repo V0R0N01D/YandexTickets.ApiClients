@@ -21,8 +21,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка городов")]
 	public async Task GetCityListAsync()
 	{
-		var request = new GetCityListRequest(_auth);
-		var response = await _client.GetCityListAsync(request);
+		var request = new GetCityListRequest();
+		var response = await Client.GetCityListAsync(request);
 
 		AssertResponseSuccess(response);
 	}
@@ -31,8 +31,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка мероприятий")]
 	public async Task GetActivityListAsync()
 	{
-		var request = new GetActivityListRequest(_auth, GetCityId());
-		var response = await _client.GetActivityListAsync(request);
+		var request = new GetActivityListRequest(GetCityId());
+		var response = await Client.GetActivityListAsync(request);
 
 		AssertResponseSuccess(response);
 	}
@@ -41,8 +41,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка событий")]
 	public async Task GetEventListAsync()
 	{
-		var request = new GetEventListRequest(_auth, GetCityId());
-		var response = await _client.GetEventListAsync(request);
+		var request = new GetEventListRequest(GetCityId());
+		var response = await Client.GetEventListAsync(request);
 
 		AssertResponseSuccess(response);
 	}
@@ -53,8 +53,8 @@ public class CrmClientIntegrationTests
 		var startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-2));
 		var endDate = DateOnly.FromDateTime(DateTime.Now);
 
-		var request = new GetEventListRequest(_auth, GetCityId(), startDate: startDate, endDate: endDate);
-		var response = await _client.GetEventListAsync(request);
+		var request = new GetEventListRequest(GetCityId(), startDate: startDate, endDate: endDate);
+		var response = await Client.GetEventListAsync(request);
 
 		AssertResponseSuccess(response);
 
@@ -71,8 +71,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение отчета по событиям")]
 	public async Task GetEventReportAsync()
 	{
-		var request = new GetEventReportRequest(_auth, GetCityId(), _testData.EventsId);
-		var response = await _client.GetEventReportAsync(request);
+		var request = new GetEventReportRequest(GetCityId(), TestData.EventsId);
+		var response = await Client.GetEventReportAsync(request);
 
 		AssertResponseSuccess(response);
 	}
@@ -91,8 +91,8 @@ public class CrmClientIntegrationTests
 		var startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-2));
 		var endDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-1));
 
-		var request = new GetOrderListRequest(_auth, GetCityId(), startDate: startDate, endDate: endDate);
-		var response = await _client.GetOrderListAsync(request);
+		var request = new GetOrderListRequest(GetCityId(), startDate: startDate, endDate: endDate);
+		var response = await Client.GetOrderListAsync(request);
 
 		AssertResponseSuccess(response);
 
@@ -112,8 +112,8 @@ public class CrmClientIntegrationTests
 		var orders = await GetOrdersAsync();
 		var orderId = orders.Result![0].Id;
 
-		var request = new GetOrderListRequest(_auth, GetCityId(), orderId);
-		var response = await _client.GetOrderListAsync(request);
+		var request = new GetOrderListRequest(GetCityId(), orderId);
+		var response = await Client.GetOrderListAsync(request);
 
 		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count == 1);
@@ -123,8 +123,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка аннулированных заказов")]
 	public async Task GetOrderListWithAnnulateStatusAsync()
 	{
-		var request = new GetOrderListRequest(_auth, GetCityId(), status: OrderStatus.Annulate);
-		var response = await _client.GetOrderListAsync(request);
+		var request = new GetOrderListRequest(GetCityId(), status: OrderStatus.Annulate);
+		var response = await Client.GetOrderListAsync(request);
 
 		AssertResponseSuccess(response);
 
@@ -142,8 +142,8 @@ public class CrmClientIntegrationTests
 		var orders = await GetOrdersAsync();
 		var orderId = orders.Result![0].Id;
 
-		var request = new GetOrderInfoRequest(_auth, GetCityId(), orderId);
-		var response = await _client.GetOrderInfoAsync(request);
+		var request = new GetOrderInfoRequest(GetCityId(), orderId);
+		var response = await Client.GetOrderInfoAsync(request);
 
 		AssertResponseSuccess(response);
 		Assert.Single(response.Result!);
@@ -156,8 +156,8 @@ public class CrmClientIntegrationTests
 		var orders = await GetOrdersAsync();
 		int[] ordersId = orders.Result!.Take(2).Select(o => o.Id).ToArray();
 
-		var request = new GetOrderInfoRequest(_auth, GetCityId(), ordersId);
-		var response = await _client.GetOrderInfoAsync(request);
+		var request = new GetOrderInfoRequest(GetCityId(), ordersId);
+		var response = await Client.GetOrderInfoAsync(request);
 
 		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count == ordersId.Length);
@@ -169,8 +169,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка покупателей")]
 	public async Task GetCustomerListAsync()
 	{
-		var request = new GetCustomerListRequest(_auth, GetCityId(), DefaultLimit);
-		var response = await _client.GetCustomerListAsync(request);
+		var request = new GetCustomerListRequest(GetCityId(), DefaultLimit);
+		var response = await Client.GetCustomerListAsync(request);
 
 		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count <= DefaultLimit);
@@ -181,8 +181,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка агентов")]
 	public async Task GetAgentListAsync()
 	{
-		var request = new GetAgentListRequest(_auth, GetCityId(), DefaultLimit);
-		var response = await _client.GetAgentListAsync(request);
+		var request = new GetAgentListRequest(GetCityId(), DefaultLimit);
+		var response = await Client.GetAgentListAsync(request);
 
 		AssertResponseSuccess(response);
 		Assert.True(response.Result!.Count <= DefaultLimit);
@@ -193,8 +193,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Отписывает покупателей от рассылок в системе Яндекс Билеты.")]
 	public async Task UnsubscribeCustomerAsync()
 	{
-		var request = new UnsubscribeCustomerRequest(_auth, GetCityId(), _testData.Email);
-		var response = await _client.UnsubscribeCustomerAsync(request);
+		var request = new UnsubscribeCustomerRequest(GetCityId(), TestData.Email);
+		var response = await Client.UnsubscribeCustomerAsync(request);
 
 		Assert.True(response.Status == ResponseStatus.Success, response.Error);
 		Assert.True(response.Result);
@@ -204,8 +204,8 @@ public class CrmClientIntegrationTests
 	[Fact(DisplayName = "Получение списка проданных билетов")]
 	public async Task GetSoldTicketListAsync()
 	{
-		var request = new GetSoldTicketsRequest(_auth, GetCityId());
-		var response = await _client.GetSoldTicketsAsync(request);
+		var request = new GetSoldTicketsRequest(GetCityId());
+		var response = await Client.GetSoldTicketsAsync(request);
 
 		Assert.True(response.Status == ResponseStatus.Success, response.Error);
 		AssertResponseSuccess(response);
@@ -215,8 +215,8 @@ public class CrmClientIntegrationTests
 	// Метод для получения списка заказов
 	private async Task<OrderListResponse> GetOrdersAsync()
 	{
-		var request = new GetOrderListRequest(_auth, GetCityId());
-		var response = await _client.GetOrderListAsync(request);
+		var request = new GetOrderListRequest(GetCityId());
+		var response = await Client.GetOrderListAsync(request);
 
 		AssertResponseSuccess(response);
 		return response;

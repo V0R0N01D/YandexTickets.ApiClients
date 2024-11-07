@@ -7,12 +7,14 @@ namespace YandexTickets.ApiClients.Crm.Models.Requests;
 /// </summary>
 public class GetActivityListRequest : RequestBaseWithCity
 {
-	/// <summary>
-	/// Конструктор класса запроса списка мероприятий.
-	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
-	/// <param name="cityId">Идентификатор города.</param>
-	public GetActivityListRequest(string auth, int cityId) : base(auth, cityId) { }
+    /// <summary>
+    /// Конструктор класса запроса списка мероприятий.
+    /// </summary>
+    /// <param name="cityId">Идентификатор города.</param>
+    public GetActivityListRequest(int cityId) : base(cityId)
+    {
+    }
 
-	protected override string Action => "crm.activity.list";
+    /// <inheritdoc />
+    protected override string Action => "crm.activity.list";
 }

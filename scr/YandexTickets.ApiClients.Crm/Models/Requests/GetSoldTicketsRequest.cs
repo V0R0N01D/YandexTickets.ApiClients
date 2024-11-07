@@ -13,20 +13,20 @@ public class GetSoldTicketsRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор запроса для получения списка проданных билетов.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="eventId">Идентификатор события</param>
 	/// <param name="startDate">Дата начиная с которой (включительно) билеты возвращаются в ответе.</param>
 	/// <param name="endDate">Дата до которой (включительно) билеты возвращаются в ответе.</param>
-	public GetSoldTicketsRequest(string auth, int cityId, int? eventId = null,
+	public GetSoldTicketsRequest(int cityId, int? eventId = null,
 		DateOnly? startDate = null, DateOnly? endDate = null)
-		: base(auth, cityId)
+		: base(cityId)
 	{
 		EventId = eventId;
 		StartDate = startDate;
 		EndDate = endDate;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.order.ticket.list";
 
 	/// <summary>

@@ -13,15 +13,14 @@ public class GetOrderListRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор класса запроса списка заказов.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="orderId">Идентификатор заказа.</param>
 	/// <param name="startDate">Дата операции начиная с которой (включительно) заказы возвращаются в ответе.</param>
 	/// <param name="endDate">Дата операции до которой (включительно) заказы возвращаются в ответе.</param>
 	/// <param name="status">Статус заказа.</param>
-	public GetOrderListRequest(string auth, int cityId, int? orderId = null,
+	public GetOrderListRequest(int cityId, int? orderId = null,
 		DateOnly? startDate = null, DateOnly? endDate = null, OrderStatus? status = null)
-		: base(auth, cityId)
+		: base(cityId)
 	{
 		OrderId = orderId;
 		StartDate = startDate;
@@ -29,6 +28,7 @@ public class GetOrderListRequest : RequestBaseWithCity
 		Status = status;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.order.list";
 
 	/// <summary>

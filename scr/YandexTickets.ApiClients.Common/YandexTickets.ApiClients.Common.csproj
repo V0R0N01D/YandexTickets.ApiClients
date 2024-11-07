@@ -13,7 +13,8 @@
 		<Copyright></Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>This package contains shared utilities, models, and services required by the Yandex Tickets CRM and Agent API clients.</Description>
-		<Version>1.0.2</Version>
+		<Version>1.1.0</Version>
+		<PackageReleaseNotes>The logic for obtaining an authorization token has been moved from the request class to the client class.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

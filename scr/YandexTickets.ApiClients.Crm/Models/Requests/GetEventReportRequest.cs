@@ -12,11 +12,10 @@ public class GetEventReportRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор класса запроса отчета по событиям.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="eventsId">Один или несколько идентификаторов событий.</param>
-	public GetEventReportRequest(string auth, int cityId, params int[] eventsId)
-		: base(auth, cityId)
+	public GetEventReportRequest(int cityId, params int[] eventsId)
+		: base(cityId)
 	{
 		if (eventsId == null || eventsId.Length == 0)
 			throw new ArgumentNullException(nameof(eventsId),
@@ -25,6 +24,7 @@ public class GetEventReportRequest : RequestBaseWithCity
 		EventsId = eventsId;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.report.event";
 
 	/// <summary>

@@ -11,17 +11,17 @@ public class GetAgentListRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор класса запроса списка агентов.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="limit">Максимальное количество возвращаемых объектов. Выдается не больше 1000 агентов.</param>
 	/// <param name="offset">Количество пропускаемых в ответе объектов, начиная с первого.</param>
-	public GetAgentListRequest(string auth, int cityId, int? limit = null, int? offset = null)
-		: base(auth, cityId)
+	public GetAgentListRequest(int cityId, int? limit = null, int? offset = null)
+		: base(cityId)
 	{
 		Limit = limit;
 		Offset = offset;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.agent.list";
 
 	/// <summary>

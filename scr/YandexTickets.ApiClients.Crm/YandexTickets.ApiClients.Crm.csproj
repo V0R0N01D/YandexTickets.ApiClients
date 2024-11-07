@@ -10,17 +10,17 @@
 		<PackageProjectUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/V0R0N01D/YandexTickets.ApiClients</RepositoryUrl>
 		<PackageTags>Yandex; Tickets; API; CRM; Client; Ticketing; Яндекс; Билеты; Интеграция</PackageTags>
-		<PackageReleaseNotes>The first release of the Yandex.Tickets CRM API client.</PackageReleaseNotes>
+		<PackageReleaseNotes>The logic for obtaining an authorization token has been moved from the request class to the client class.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<NoWin32Manifest>true</NoWin32Manifest>
-		<Version>1.0.3</Version>
+		<Version>1.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="YandexTickets.ApiClients.Common" Version="1.0.2" />
+	  <PackageReference Include="YandexTickets.ApiClients.Common" Version="[1.1.0,1.2.0)" />
 	</ItemGroup>
 
 </Project>

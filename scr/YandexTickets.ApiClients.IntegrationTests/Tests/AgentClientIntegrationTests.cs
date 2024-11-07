@@ -17,8 +17,8 @@ public class AgentClientIntegrationTests
 	[Fact(DisplayName = "Получение списка городов")]
 	public async Task GetCityListAsync()
 	{
-		var request = new GetCityListRequest(_auth);
-		var response = await _client.GetCityListAsync(request);
+		var request = new GetCityListRequest();
+		var response = await Client.GetCityListAsync(request);
 
 		AssertResponseSuccess(response);
 	}

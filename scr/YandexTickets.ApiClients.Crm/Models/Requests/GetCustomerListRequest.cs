@@ -11,17 +11,17 @@ public class GetCustomerListRequest : RequestBaseWithCity
 	/// <summary>
 	/// Конструктор класса запроса списка покупателей.
 	/// </summary>
-	/// <param name="auth">Идентификатор внешней системы.</param>
 	/// <param name="cityId">Идентификатор города.</param>
 	/// <param name="limit">Максимальное количество возвращаемых объектов. Выдается не больше 1000 покупателей.</param>
 	/// <param name="offset">Количество пропускаемых в ответе объектов, начиная с первого.</param>
-	public GetCustomerListRequest(string auth, int cityId, int? limit = null, int? offset = null)
-		: base(auth, cityId)
+	public GetCustomerListRequest(int cityId, int? limit = null, int? offset = null)
+		: base(cityId)
 	{
 		Limit = limit;
 		Offset = offset;
 	}
 
+	/// <inheritdoc />
 	protected override string Action => "crm.customer.list";
 
 	/// <summary>

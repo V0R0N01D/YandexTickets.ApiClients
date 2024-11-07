@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="YandexTickets.ApiClients.Common" Version="1.0.2" />
+    <PackageReference Include="YandexTickets.ApiClients.Common" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

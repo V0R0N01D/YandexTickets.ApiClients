@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using YandexTickets.ApiClients.Crm;
 using YandexTickets.ApiClients.IntegrationTests.Common;
 using YandexTickets.ApiClients.IntegrationTests.Models;
@@ -15,7 +16,13 @@ public class CrmFixture : BaseFixture
         services.AddSingleton<IConfiguration>(configuration);
         services.Configure<CrmTestData>(configuration.GetSection("CrmTestData"));
 
-        services.AddHttpClient<IYandexTicketsCrmApiClient, YandexTicketsCrmApiClient>();
+        services.AddHttpClient<IYandexTicketsCrmApiClient, YandexTicketsCrmApiClient>(
+            (client, provider) =>
+            {
+                var config = provider
+                    .GetRequiredService<IOptions<CrmTestData>>().Value;
+                return new YandexTicketsCrmApiClient(config.Login!, config.Password!, client);
+            });
 
         ServiceProvider = services.BuildServiceProvider();
     }
