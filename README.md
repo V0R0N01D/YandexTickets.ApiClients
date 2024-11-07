@@ -5,7 +5,6 @@
 ## Оглавление
 - [Общее описание](#общее-описание)
   - [Официальная документация](#официальная-документация)
-- [Авторизация](#авторизация)
 - [CRM API Клиент](#crm-api-клиент)
   - [Возможности](#возможности)
   - [Установка](#установка)
@@ -32,18 +31,6 @@
 - [Документация CRM API Яндекс.Билетов](https://yandex.ru/dev/tickets/crm/doc/ru/concepts/)
 - [Документация Agent API Яндекс.Билетов](https://yandex.ru/dev/tickets/agent/doc/ru/concepts/)
 
-## Авторизация
-
-Для выполнения запросов к API необходимо сгенерировать токен авторизации согласно [данной документации](https://yandex.ru/dev/tickets/agent/doc/ru/concepts/access):
-
-```csharp
-using YandexTickets.ApiClients.Common.Services;
-
-string login = "login";
-string password = "password";
-string authToken = AuthService.GenerateAuthToken(login, password);
-```
-
 ## CRM API Клиент
 
 ### Возможности:
@@ -61,13 +48,16 @@ string authToken = AuthService.GenerateAuthToken(login, password);
 
 #### Инициализация клиента
 
-Для начала работы необходимо создать экземпляр `YandexTicketsCrmApiClient`, предоставив ему экземпляр `HttpClient`:
+Для начала работы необходимо создать экземпляр `YandexTicketsCrmApiClient`, предоставив ему данные для авторизации в api и экземпляр `HttpClient`:
 
 ```csharp
 using YandexTickets.ApiClients.Crm;
 
+var login = "login"
+var password = "password"
 var httpClient = new HttpClient();
-var crmClient = new YandexTicketsCrmApiClient(httpClient);
+
+var crmClient = new YandexTicketsCrmApiClient(login, password, httpClient);
 ```
 
 #### Выполнение запросов
@@ -80,7 +70,7 @@ using YandexTickets.ApiClients.Crm.Models.Requests;
 using YandexTickets.ApiClients.Crm.Models.Responses;
 
 // Создаем запрос
-var request = new GetCityListRequest(authToken);
+var request = new GetCityListRequest();
 
 // Отправляем запрос
 var response = await crmClient.GetCityListAsync(request);
@@ -99,8 +89,8 @@ else
 ##### Получение списка событий
 
 ```csharp
-int cityId = "идентификатор_города";
-var request = new GetEventListRequest(authToken, cityId);
+int cityId = 1234567; // идентификатор_города
+var request = new GetEventListRequest(cityId);
 var response = await crmClient.GetEventListAsync(request);
 
 if (response.Status == ResponseStatus.Success)
@@ -134,7 +124,6 @@ else
 
 ### Полезная информация
 
-- Используйте `AuthService.GenerateAuthToken(string login, string password)` для генерации токена авторизации, необходимого для выполнения запросов к API.
 - Классы запросов находятся в пространстве `YandexTickets.ApiClients.Crm.Models.Requests`.
 - Ответы от API представлены в виде классов из пространства `YandexTickets.ApiClients.Crm.Models.Responses`.
 
